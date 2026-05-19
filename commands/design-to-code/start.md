@@ -36,7 +36,7 @@ Re-running `/design-to-code:start` mid-flow:
 ## Related commands
 
 - `/design-to-code:status` — print state for one or all features.
-- `/design-to-code:plan <feature>` — once intake is done, go to Gates 3–6.
+- `/design-to-code:plan <feature>` — once intake is done, go to Gates 3–7.
 - `/design-to-code:dashboard` — see every feature ever bridged.
 
 ---

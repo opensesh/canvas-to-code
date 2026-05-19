@@ -8,7 +8,7 @@ Portable rules that define subagent behavior for the Design-to-Code Bridge plugi
 
 **"Translate intent, not pixels."**
 
-The bridge takes HTML + screenshot and produces DS-aligned code. Both inputs are always off-brand in some way. The PM agent orchestrates ten gates; the worker agents (extractor, auditor, mapper, planner, reviewer) do focused work behind those gates. **The human is the engineer — agents support, never replace, the implementation.**
+The bridge takes HTML + screenshot and produces DS-aligned code. Both inputs are always off-brand in some way. The PM agent orchestrates eleven gates; the worker agents (extractor, auditor, mapper, data-binder, planner, reviewer) do focused work behind those gates. **The human is the engineer — agents support, never replace, the implementation.**
 
 ---
 
@@ -17,7 +17,7 @@ The bridge takes HTML + screenshot and produces DS-aligned code. Both inputs are
 Agents are spawned by these primary commands:
 
 - `/design-to-code:start` — Spawns `design-to-code-pm` for Gate 0 intake.
-- `/design-to-code:plan <feature>` — Spawns `-auditor`, `-extractor`, `-mapper`, `-planner` (Gates 3–6).
+- `/design-to-code:plan <feature>` — Spawns `-auditor`, `-extractor`, `-mapper`, `-data-binder`, `-planner` (Gates 3–7).
 - `/design-to-code:validate <feature>` — Re-runs `-mapper` standalone (Gate 5).
 - `/design-to-code:slice <n>` — PM runs Gate 8 preflight.
 - `/design-to-code:swap` — PM runs Gate 9 preflight.
@@ -29,7 +29,7 @@ Worker agents are never spawned directly; the PM orchestrates.
 
 ---
 
-## The Ten Gates
+## The Eleven Gates
 
 Gates run in strict order. PM refuses to advance to gate N until gate N-1 has `result: pass` or `result: warn` (when configured non-blocking).
 
@@ -41,10 +41,11 @@ Gates run in strict order. PM refuses to advance to gate N until gate N-1 has `r
 | 3 | Target surface audit | yes |
 | 4 | Scope confirmation | yes |
 | 5 | Component mapping ◆ | yes — every flagged row must be acknowledged |
-| 6 | Slice plan | yes |
-| 7 | Pre-slice (per slice) | yes |
-| 8 | Pre-swap | yes |
-| 9 | Pre-retro | configurable; default warn |
+| 6 | Data binding | yes — every low-confidence binding must be resolved |
+| 7 | Slice plan | yes |
+| 8 | Pre-slice (per slice) | yes |
+| 9 | Pre-swap | yes |
+| 10 | Pre-retro | configurable; default warn |
 
 Severity can be overridden per-consumer in `.design-to-code/config.yaml.gate_severities`.
 

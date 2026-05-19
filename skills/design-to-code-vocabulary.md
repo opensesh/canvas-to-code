@@ -1,6 +1,6 @@
 ---
 name: design-to-code-vocabulary
-description: Vocabulary and conceptual model for the Design-to-Code Bridge — base/ds/custom tier model, slice rhythm, the ten gates, parallel-route pattern. Auto-activates when any /design-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
+description: Vocabulary and conceptual model for the Design-to-Code Bridge — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /design-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
 ---
 
 # Design-to-Code Vocabulary
@@ -45,7 +45,7 @@ scaffold → chrome → cards → wire data → secondary surface → swap
 
 LOC budgets are guidelines, not laws. Mapper proposes splits when a slice exceeds `slice_loc_budget` (default 550).
 
-## The ten gates
+## The eleven gates
 
 | # | Name | Owner | Failure mode |
 |---|---|---|---|
@@ -55,12 +55,13 @@ LOC budgets are guidelines, not laws. Mapper proposes splits when a slice exceed
 | 3 | Target surface audit | Auditor | Route doesn't exist + `isExistingRoute=true` → confirm. |
 | 4 | Scope confirmation | PM | Unresolved questions block. |
 | 5 | **Component mapping** ◆ | Mapper | Low-confidence rows block until acknowledged. |
-| 6 | Slice plan | PM | Slice >550 LOC → propose split. |
-| 7 | Pre-slice | PM | Branch / working-tree checks. |
-| 8 | Pre-swap | PM | Behaviour-port checklist unticked. |
-| 9 | Pre-retro | PM | Typecheck/build failing → remediate first. |
+| 6 | Data binding | Data binder | Low-confidence bindings (ambiguous page, missing service signal) block until resolved. |
+| 7 | Slice plan | PM / Planner | Slice >550 LOC → propose split. Mock/schema/type files allocated per slice. |
+| 8 | Pre-slice | PM | Branch / working-tree checks. |
+| 9 | Pre-swap | PM | Behaviour-port checklist unticked. |
+| 10 | Pre-retro | PM | Typecheck/build failing → remediate first. |
 
-Gate 5 is the keystone — the artefact that earns the bridge its keep. Every visual unit categorized; every hex mapped; every icon gap flagged. Skipping or rushing Gate 5 produces mid-slice churn.
+Gate 5 is the keystone — the artefact that earns the bridge its keep. Every visual unit categorized; every hex mapped; every icon gap flagged. Gate 6 extends it: every unit also gets a clear data source (backend / mock / none) so designers and developers iterate against the same contract.
 
 ## The parallel-route pattern
 

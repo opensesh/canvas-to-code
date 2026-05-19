@@ -16,10 +16,12 @@ Both use `templates/plan.md` (engineer-facing) and `templates/spike.md` (canonic
 
 ## Inputs
 
-- `.design-to-code/state/<feature>/status.json` — phase, scope, componentMap, slices, gateLog.
+- `.design-to-code/state/<feature>/status.json` — phase, scope, componentMap (including `dataBindings`), slices, gateLog.
 - `.design-to-code/state/<feature>/audit.md` — auditor's output.
 - `/tmp/<feature>-template.tsx` — extractor's JSX.
 - `.design-to-code/token-map.yaml` — for the Token Map section.
+
+The `componentMap.dataBindings` block (from Gate 6) tells you which units are wired to existing backend services, which need mock JSON + schema + TS files generated, and which are decorative. The `dataBindings.filesToWrite[]` array lists every mock/schema/type file the planner should allocate into a slice.
 
 ## Output structure (mirrors the Brand Hub plan)
 
@@ -48,6 +50,23 @@ Lift from status.json.scope and audit.md.>
 
 ## Token map
 <Existing token-map.yaml entries used + tokenMapDelta proposals.>
+
+## Data contracts
+<From componentMap.dataBindings. One subsection per bucket.>
+
+**Backend (already wired):**
+
+| Unit | Service | Hook |
+|---|---|---|
+| <entry.unitLabel> | <entry.backendService> | <entry.backendHook> |
+
+**Mocks (to be emitted):**
+
+| Unit | Mock | Schema | Type |
+|---|---|---|---|
+| <entry.unitLabel> | <entry.mockFile> | <entry.schemaFile> | <entry.typeFile> |
+
+**Decorative (no data):** <list of unit labels>
 
 ## Data plan
 <Per-feature: hooks, services, mock seeds.>
@@ -106,6 +125,7 @@ Verify:
 - **Don't write feature code.** No TSX, no hooks, no SQL. Templates and markdown only.
 - **Quote from upstream agents — don't paraphrase.** If the mapper said `tier: base, target: components/base/application/tabs/tabs.tsx`, use that exact target string.
 - **Be slice-explicit.** Vague slices ("build the layout") are useless. List files, declare LOC budget, name verify steps.
+- **Allocate every `filesToWrite[]` entry.** For each mock/schema/type triple in `dataBindings.filesToWrite[]`, add the three files to the same slice as the unit that consumes them (i.e. the slice that owns the unit's `targetPath`). The planner does NOT write these files itself — only declares them in `slices[n].files`.
 
 ---
 

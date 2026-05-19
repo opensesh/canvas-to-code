@@ -1,12 +1,12 @@
 ---
-description: "Engineer: runs Gates 3–6 end-to-end (target audit → scope → component mapping → slice plan). Writes plan doc + spike."
+description: "Engineer: runs Gates 3–7 end-to-end (target audit → scope → component mapping → data binding → slice plan). Writes plan doc + spike."
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 argument-hint: <feature>
 ---
 
-# /design-to-code:plan — Gates 3–6
+# /design-to-code:plan — Gates 3–7
 
-Runs the four planning gates against an intake-complete feature. Spawns four subagents in sequence and stitches their output into a single plan doc + a spike entry.
+Runs the five planning gates against an intake-complete feature. Spawns five subagents in sequence and stitches their output into a single plan doc + a spike entry.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ Runs the four planning gates against an intake-complete feature. Spawns four sub
 
 ## What it does
 
-The PM agent walks Gates 3–6 sequentially:
+The PM agent walks Gates 3–7 sequentially:
 
 ### Gate 3 — Target surface audit
 
@@ -46,6 +46,18 @@ Mapper produces:
 
 PM surfaces low-confidence rows + net-new units. Refuses to advance until every flagged row is acknowledged.
 
+### Gate 6 — Data binding
+
+Spawn `@design-to-code-data-binder.md` with the locked `componentMap` and the consumer's `lib/services/`, `hooks/`, and route tree. Data binder classifies each unit:
+
+- **`backend`** — existing service + hook detected; the planner notes which.
+- **`mock`** — no backend; the binder proposes a JSON Schema + mock JSON + TS interface triple under `data/<page>/<subpage>/`.
+- **`none`** — decorative; no data needed.
+
+Returns `dataBindings.entries[]`, a rollup, and `dataBindings.filesToWrite[]` for the planner to allocate into slices.
+
+PM surfaces every low-confidence entry. Refuses to advance until each is acknowledged or overridden.
+
 ### Gate 7 — Slice plan
 
 PM proposes a slice plan using the rhythm from `config.yaml.default_phase_rhythm`. Each slice: title, slug, LOC budget, files (from the mapping), dependencies, verify steps. Slices >550 LOC trigger a split proposal.
@@ -54,7 +66,7 @@ PM proposes a slice plan using the rhythm from `config.yaml.default_phase_rhythm
 
 1. `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md` — the canonical spike (planner writes; templates/spike.md).
 2. `.design-to-code/state/<feature>/plan.md` — engineer-facing plan doc (planner writes; templates/plan.md).
-3. `status.json` updates: `phase: plan`, `componentMap`, `slices[]` (titles + budgets), gateLog entries 3–6.
+3. `status.json` updates: `phase: plan`, `componentMap` (including `dataBindings`), `slices[]` (titles + budgets, with mock/schema/type files allocated per slice), gateLog entries 3–7.
 
 ## Arguments
 

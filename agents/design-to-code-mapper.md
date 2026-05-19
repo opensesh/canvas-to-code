@@ -126,6 +126,10 @@ The token map is part of your job. If you skip it, the engineer ends up doing it
 
 Terse. Honest. No padding. The output is structured JSON, not prose. If you need to explain a tricky decision, put it in the unit's `notes` field, max one sentence.
 
+## Next gate
+
+After your output, the PM will spawn `design-to-code-data-binder` to classify each unit's data source (backend / mock / none). **Do not attempt that classification yourself** — your `componentMap` is its input, and keeping the contexts separated keeps both jobs accurate.
+
 ---
 
 *Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*

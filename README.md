@@ -47,9 +47,9 @@ It started inside [Open Session](https://opensession.co)'s Brand OS (BOS) codeba
 
 ---
 
-## What it does — the ten gates
+## What it does — the eleven gates
 
-The PM agent walks every handoff through ten gates and refuses to advance when a gate fails. Resumable any time.
+The PM agent walks every handoff through eleven gates and refuses to advance when a gate fails. Resumable any time.
 
 | Gate | Name | Failure mode |
 |---|---|---|
@@ -59,12 +59,13 @@ The PM agent walks every handoff through ten gates and refuses to advance when a
 | 3 | **Target surface audit** | Auditor agent reports route status, behaviors to port, sub-routes. |
 | 4 | **Scope confirmation** | Routes added/dropped, behaviors to port, chrome decisions — all explicit. |
 | 5 | **Component mapping** ◆ | The keystone. Every visual unit gets tier + target + new-or-reused + confidence. Low-confidence rows must be acknowledged. |
-| 6 | **Slice plan** | Default rhythm: scaffold → chrome → cards → wire data → secondary → swap. 150–550 LOC per slice. |
-| 7 | **Pre-slice** | Branch identity, working-tree cleanliness, prior-slice-merged checks before every `/design-to-code:slice <n>`. |
-| 8 | **Pre-swap** | Behaviour-port checklist verified, parallel route 200s, dropped routes deletion-ready. |
-| 9 | **Pre-retro** | Swap merged, typecheck + build green on main. |
+| 6 | **Data binding** | Classifies each unit as `backend` (wire to existing service), `mock` (emit JSON Schema + mock JSON + TS interface under `data/<page>/<subpage>/`), or `none`. The schema is the durable contract that informs the production DB. |
+| 7 | **Slice plan** | Default rhythm: scaffold → chrome → cards → wire data → secondary → swap. 150–550 LOC per slice. Mock/schema/type files allocated to the slice that consumes them. |
+| 8 | **Pre-slice** | Branch identity, working-tree cleanliness, prior-slice-merged checks before every `/design-to-code:slice <n>`. |
+| 9 | **Pre-swap** | Behaviour-port checklist verified, parallel route 200s, dropped routes deletion-ready. |
+| 10 | **Pre-retro** | Swap merged, typecheck + build green on main. |
 
-Gate 5 (component mapping) is what makes everything downstream cheap. It prevents three classes of mid-slice churn: building a custom component a vendor primitive covers, discovering an icon doesn't exist mid-slice, re-discovering raw hex literals one slice at a time.
+Gate 5 (component mapping) is what makes everything downstream cheap. Gate 6 (data binding) extends that: every unit also gets a clear answer to "where does this data come from?", and any mocks emitted there become the source of truth for the eventual production DB schema.
 
 ---
 
@@ -127,7 +128,7 @@ Per-feature state. Gitignored by default. Holds `phase`, `gateLog[]`, `component
 |---|---|---|
 | `/design-to-code:start` | Any | Canonical entry. PM runs Gate 0 (intake) — what are you building, materials check, source tool. Resumable. |
 | `/design-to-code:prep <feature>` | Designer | Power-user shortcut — scaffolds `.claude-design/<feature>/` without the conversational interview. |
-| `/design-to-code:plan <feature>` | Engineer | Runs Gates 3–6 end-to-end. Writes the plan doc + spike. |
+| `/design-to-code:plan <feature>` | Engineer | Runs Gates 3–7 end-to-end. Writes the plan doc + spike. |
 | `/design-to-code:validate <feature>` | Engineer | Re-runs Gate 5 (mapping) standalone. |
 | `/design-to-code:slice <n>` | Engineer | Gate 8 preflight + slice PR body. Updates `status.json.slices[]`. |
 | `/design-to-code:swap` | Engineer | Gate 9 preflight + swap PR body. |
