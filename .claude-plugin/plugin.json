@@ -1,7 +1,7 @@
 {
   "name": "design-to-code-bridge",
-  "version": "0.1.0",
-  "description": "Translate design exports (HTML + screenshot) into design-system-aligned code through ten explicit gates",
+  "version": "0.2.0",
+  "description": "Translate design exports (HTML + screenshot) into design-system-aligned code through eleven explicit gates",
   "author": {
     "name": "Open Session",
     "email": "hello@opensession.co"

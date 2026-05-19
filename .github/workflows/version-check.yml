@@ -1,0 +1,51 @@
+name: Version bump check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.claude-plugin/plugin.json'
+      - 'agents/**'
+      - 'commands/**'
+      - 'skills/**'
+      - 'templates/**'
+      - 'scripts/**'
+      - 'DESIGN_TO_CODE_RULES.md'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read PR version
+        id: pr
+        run: |
+          version=$(jq -r '.version' .claude-plugin/plugin.json)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Read main version
+        id: main
+        run: |
+          version=$(git show origin/main:.claude-plugin/plugin.json | jq -r '.version')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Compare
+        run: |
+          pr_version="${{ steps.pr.outputs.version }}"
+          main_version="${{ steps.main.outputs.version }}"
+          echo "PR version:    $pr_version"
+          echo "main version:  $main_version"
+          if [ "$pr_version" = "$main_version" ]; then
+            echo ""
+            echo "::error::plugin.json version ($pr_version) matches main. Bump it (semver: patch for fixes/docs, minor for features, major for breaking) and update CHANGELOG.md."
+            exit 1
+          fi
+          echo "Version bumped — ok."

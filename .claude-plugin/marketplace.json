@@ -1,6 +1,6 @@
 {
   "name": "design-to-code-bridge-marketplace",
-  "description": "Single-plugin marketplace for the Design-to-Code Bridge — translates design exports (HTML + screenshot) into design-system-aligned code through ten explicit gates.",
+  "description": "Single-plugin marketplace for the Design-to-Code Bridge — translates design exports (HTML + screenshot) into design-system-aligned code through eleven explicit gates.",
   "owner": {
     "name": "Open Session",
     "email": "hello@opensession.co",
