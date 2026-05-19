@@ -51,6 +51,58 @@ Severity can be overridden per-consumer in `.design-to-code/config.yaml.gate_sev
 
 ---
 
+## Data Contracts (Gate 6)
+
+`design-to-code-data-binder` (Gate 6) classifies every unit's data source as `backend`, `mock`, or `none`. For each `mock` unit it proposes a triple of files; the PM writes them, the planner allocates them to the slice that consumes them.
+
+### Hierarchical convention
+
+Mock contracts always live under a per-page, per-subpage hierarchy:
+
+```
+data/<page>/<subpage>.mock.json      # mock data (array or object)
+data/<page>/<subpage>.schema.json    # JSON Schema Draft-07
+types/mocks/<page>-<subpage>.ts      # generated TypeScript interface + typed const re-export
+```
+
+When the unit is page-level (no subpage), use `data/<page>/index.mock.json` and `types/mocks/<page>.ts`.
+
+The binder never emits to the flat root of `data/`. Consumer repos may have legacy flat fallbacks (e.g. `data/<feature>-fallback.json`) that predate this gate — the binder does not mirror their shape, does not migrate them, and does not special-case them.
+
+### The JSON Schema is the contract
+
+The `.schema.json` is the durable, language-agnostic contract between designer and developer. It survives as input to the eventual production database schema: when the backend team builds the real service, they translate the schema into Pydantic / Supabase migrations / GraphQL types. Treat the schema as a spec, not a placeholder.
+
+- `$schema` must be `http://json-schema.org/draft-07/schema#`.
+- `title` matches the TS interface name (PascalCase, ending in `Mock`).
+- Hex color fields include `"pattern": "^#[0-9A-Fa-f]{6}$"`.
+- ID fields are `"type": "string"` (matches the consumer's UUID convention).
+- Enum-like fields use `"enum": [...]`, not bare `"type": "string"`.
+- Mark fields `required` only when the design clearly shows them populated.
+
+### Rollup invariant
+
+`status.json.componentMap.dataBindings.rollup` must satisfy `backend + mock + none === entries.length`. The PM rejects binder output that violates this. The `lowConfidenceCount` field must equal the number of entries with `confidence: "low"`.
+
+### Never invent a backend service
+
+The binder Globs `lib/services/`, `hooks/`, and the unit's `target` file for three signals: service-file match on the domain noun, React-Query hook match, and import-from-services within the target. With two or more signals → `dataSource: backend, confidence: high`. With exactly one → `backend, confidence: medium`. With zero AND tier ∈ {custom-shared, custom-page, net-new} → `mock`. With zero AND tier ∈ {base, ds} → `none`.
+
+The binder **never** asserts a backend service that doesn't already exist on disk. Engineers correcting a misclassification do so via the gate-failure response, not by inventing a service path in the binder's output.
+
+### Wiring is the engineer's job
+
+The binder returns proposed files but does **not** auto-wire mocks into hooks. A consumer hook opts in explicitly:
+
+```ts
+import { MockBrandHubColors } from '@/types/mocks/brand-hub-colors';
+const { data = MockBrandHubColors } = useQuery({ ... });
+```
+
+This keeps blast radius minimal and gives the engineer one place to flip from mock to real service when the backend is ready.
+
+---
+
 ## Agent Behavior Rules
 
 ### 1. PM Never Writes Feature Code

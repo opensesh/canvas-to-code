@@ -41,8 +41,8 @@ export function renderDashboard(statuses) {
     '',
     '## Per-feature table',
     '',
-    '| Feature | Status | Started | Closed | Slices | LOC | PRs | Spike | New / Reused |',
-    '|---|---|---|---|---|---|---|---|---|',
+    '| Feature | Status | Started | Closed | Slices | LOC | PRs | Spike | New / Reused | Backend / Mock |',
+    '|---|---|---|---|---|---|---|---|---|---|',
     ...features.map(featureRow),
     '',
     '## Component +/− diff per feature',
@@ -66,6 +66,8 @@ function normalize(s) {
     : prs.length === 1 ? `#${prs[0]}`
     : `#${prs[0]}–#${prs[prs.length - 1]}`;
 
+  const bindings = s.componentMap?.dataBindings?.rollup;
+
   return {
     feature: s.feature,
     phase: phaseLabel(s),
@@ -80,6 +82,7 @@ function normalize(s) {
     componentsReused,
     netNew,
     tier,
+    bindings,
   };
 }
 
@@ -101,7 +104,8 @@ function cumulative(features) {
 }
 
 function featureRow(f) {
-  return `| ${f.feature} | ${f.phase} | ${f.started} | ${f.closed} | ${f.slicesMerged}${f.sliceTotal && f.sliceTotal !== f.slicesMerged ? `/${f.sliceTotal}` : ''} | ${formatInt(f.loc)} | ${f.prRange} | ${f.spikePath} | +${f.componentsNew} / −${f.componentsReused} |`;
+  const bindingsCell = f.bindings ? `${f.bindings.backend} / ${f.bindings.mock}` : '—';
+  return `| ${f.feature} | ${f.phase} | ${f.started} | ${f.closed} | ${f.slicesMerged}${f.sliceTotal && f.sliceTotal !== f.slicesMerged ? `/${f.sliceTotal}` : ''} | ${formatInt(f.loc)} | ${f.prRange} | ${f.spikePath} | +${f.componentsNew} / −${f.componentsReused} | ${bindingsCell} |`;
 }
 
 function componentDiffSection(f) {

@@ -77,3 +77,15 @@ test('complete feature shows status `complete`', () => {
   const md = renderDashboard(loadStatuses());
   assert.match(md, /brand-hub-hifi\s*\|\s*complete/);
 });
+
+test('per-feature table includes Backend / Mock column populated for features with dataBindings', () => {
+  const md = renderDashboard(loadStatuses());
+  // complete.status.json has dataBindings: rollup.backend=4, mock=4 -> cell "4 / 4"
+  assert.match(md, /brand-hub-hifi[\s\S]*\+24 \/ −23 \| 4 \/ 4/);
+});
+
+test('per-feature table renders Backend / Mock as — when dataBindings missing (graceful fallback)', () => {
+  const md = renderDashboard(loadStatuses());
+  // midflight.status.json has no dataBindings -> cell "—"
+  assert.match(md, /spaces-redesign[\s\S]*\+9 \/ −18 \| —/);
+});
