@@ -1,22 +1,22 @@
 ---
-description: "Run Gate 7 preflight + generate slice PR body. Updates status.json.slices[]."
+description: "Run Gate 8 preflight + generate slice PR body. Updates status.json.slices[]."
 allowed-tools: Read, Write, Edit, Bash, Task
 argument-hint: <n>
 ---
 
 # /design-to-code:slice — Execute one slice
 
-Runs the per-slice preflight (Gate 7) and drafts the PR body for slice `<n>`. Does not write feature code — that's still the engineer.
+Runs the per-slice preflight (Gate 8) and drafts the PR body for slice `<n>`. Does not write feature code — that's still the engineer.
 
 ## Prerequisites
 
-- Plan locked (Gate 6 complete).
+- Plan locked (Gate 7 complete).
 - Slice `<n>` declared in `status.json.slices[]`.
 - Current branch matches `<feature>-pr-<n>-<slug>` (configurable via `slice_branch_pattern`).
 
 ## What it does
 
-### Gate 7 — Pre-slice
+### Gate 8 — Pre-slice
 
 PM verifies:
 
@@ -27,7 +27,7 @@ PM verifies:
 
 If any check fails, PM prints what's blocking + remediation steps. Never auto-fixes.
 
-### After Gate 7 passes
+### After Gate 8 passes
 
 1. Pull the slice's declared files from `status.json.slices[n].files` and the plan's component-mapping table.
 2. Run `scripts/check-guardrails.mjs` on the working-tree diff. Counts violations into `status.json.guardrailViolations`.

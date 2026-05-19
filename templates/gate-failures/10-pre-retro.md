@@ -1,4 +1,4 @@
-# Gate 9 — Pre-retro check failed
+# Gate 10 — Pre-retro check failed
 
 Need a clean main before we close out.
 

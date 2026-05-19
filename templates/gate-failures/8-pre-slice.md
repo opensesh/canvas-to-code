@@ -1,4 +1,4 @@
-# Gate 7 — Pre-slice check failed
+# Gate 8 — Pre-slice check failed
 
 Can't run slice {{n}} until the working state matches the plan.
 

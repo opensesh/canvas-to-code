@@ -1,5 +1,5 @@
 ---
-description: "Run Gate 9, then PM-led conversational retro. Fills retro section, flips spike status to closed."
+description: "Run Gate 10, then PM-led conversational retro. Fills retro section, flips spike status to closed."
 allowed-tools: Read, Write, Edit, Bash, Task
 ---
 
@@ -15,11 +15,11 @@ Final gate + a short conversational retro. Captures learnings, flips the spike t
 
 ## What it does
 
-### Gate 9 — Pre-retro
+### Gate 10 — Pre-retro
 
 PM verifies the prerequisites above. If anything fails, suggests a remediation commit and exits.
 
-### After Gate 9 passes
+### After Gate 10 passes
 
 PM runs a short, conversational retro (~5 minutes). Five questions, lifted from the Brand Hub run's retro shape:
 
@@ -33,7 +33,7 @@ PM runs a short, conversational retro (~5 minutes). Five questions, lifted from 
 
 1. Fills the Retro section of `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md` (or whatever path is in `status.json.specDocPath`) using `templates/retro-section.md`.
 2. Flips the spike's frontmatter `status: open` → `closed` and sets `closed: <today>`.
-3. Updates `status.json` with `phase: complete`, `completed_at`, gateLog entry for Gate 9.
+3. Updates `status.json` with `phase: complete`, `completed_at`, gateLog entry for Gate 10.
 
 ## Failure modes
 

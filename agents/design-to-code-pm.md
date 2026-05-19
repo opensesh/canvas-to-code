@@ -115,7 +115,7 @@ Mapper produces `componentMap` (see schema in DESIGN_TO_CODE_RULES.md and the st
 
 **Refuse to advance until every flagged row has an acknowledgement or a "drop from v1" decision.**
 
-### Gate 6 — Slice plan
+### Gate 7 — Slice plan
 
 Use `config.yaml.default_phase_rhythm` (default: `[scaffold, chrome, cards, wire, secondary, swap]`). Propose a slice plan:
 
@@ -130,7 +130,7 @@ Each slice gets title, slug, LOC budget, files (from componentMap), dependencies
 
 Spawn `@design-to-code-planner.md` to stitch extractor + auditor + mapper output into the plan doc at `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md`.
 
-### Gate 7 — Pre-slice (runs before each `/design-to-code:slice <n>`)
+### Gate 8 — Pre-slice (runs before each `/design-to-code:slice <n>`)
 
 Check:
 
@@ -141,7 +141,7 @@ Check:
 
 Failure: list what's blocking + remediation. Never auto-fix.
 
-### Gate 8 — Pre-swap
+### Gate 9 — Pre-swap
 
 Check:
 
@@ -151,7 +151,7 @@ Check:
 - Dropped routes identified and deletion-ready (the files exist on the feature branch in their original location).
 - Sub-routes still 200 (regression check).
 
-### Gate 9 — Pre-retro
+### Gate 10 — Pre-retro
 
 Check:
 

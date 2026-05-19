@@ -41,7 +41,7 @@ It started inside [Open Session](https://opensession.co)'s Brand OS (BOS) codeba
 ## Who it's for
 
 - **Designers initiating a handoff** — drop an HTML export + a screenshot, run `/design-to-code:start`, the PM agent walks the intake conversation. No engineering knowledge required to begin.
-- **Engineers implementing the handoff** — `/design-to-code:plan` produces a component-mapping table (every visual unit categorized base/ds/custom/net-new) and a slice plan. `/design-to-code:slice <n>` runs Gate 7 preflight + drafts the PR body.
+- **Engineers implementing the handoff** — `/design-to-code:plan` produces a component-mapping table (every visual unit categorized base/ds/custom/net-new) and a slice plan. `/design-to-code:slice <n>` runs Gate 8 preflight + drafts the PR body.
 - **Reviewers** — `/design-to-code:review <pr>` validates a slice PR against the plan's slice spec. Returns PASS/REVISE with file:line citations.
 - **Design-system leads** — `/design-to-code:dashboard` aggregates every bridged feature into one view: PRs, LOC, and a **component +/− diff** showing reuse vs. net-new. Successful runs trend toward higher reuse and fewer net-new components over time.
 
@@ -129,9 +129,9 @@ Per-feature state. Gitignored by default. Holds `phase`, `gateLog[]`, `component
 | `/design-to-code:prep <feature>` | Designer | Power-user shortcut — scaffolds `.claude-design/<feature>/` without the conversational interview. |
 | `/design-to-code:plan <feature>` | Engineer | Runs Gates 3–6 end-to-end. Writes the plan doc + spike. |
 | `/design-to-code:validate <feature>` | Engineer | Re-runs Gate 5 (mapping) standalone. |
-| `/design-to-code:slice <n>` | Engineer | Gate 7 preflight + slice PR body. Updates `status.json.slices[]`. |
-| `/design-to-code:swap` | Engineer | Gate 8 preflight + swap PR body. |
-| `/design-to-code:retro` | Engineer | Gate 9 + PM-led retro interview. |
+| `/design-to-code:slice <n>` | Engineer | Gate 8 preflight + slice PR body. Updates `status.json.slices[]`. |
+| `/design-to-code:swap` | Engineer | Gate 9 preflight + swap PR body. |
+| `/design-to-code:retro` | Engineer | Gate 10 + PM-led retro interview. |
 | `/design-to-code:dashboard` | Any | Cross-feature evaluation view with PR cross-refs and component +/− diff. |
 | `/design-to-code:status [<feature>]` | Any | Prints `status.json` summary for one feature or all. |
 | `/design-to-code:review <pr>` | Reviewer | Validates a slice PR diff against the plan's slice spec. |

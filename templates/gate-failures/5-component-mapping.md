@@ -32,4 +32,4 @@ For each: inline SVG (cheapest, 1-slice fix), batch-add to `provider-icons/` (wo
 
 **Decide:** approve (I'll write the entries to `token-map.yaml` on next save), edit (correct any wrong proposals), or skip (the engineer handles raw hex per slice — not recommended).
 
-Once all of the above are resolved, I'll advance to Gate 6 (slice plan).
+Once all of the above are resolved, I'll advance to Gate 6 (data binding).

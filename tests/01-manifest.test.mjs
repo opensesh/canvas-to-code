@@ -30,11 +30,11 @@ test('commands/design-to-code/ exists with 10 files', () => {
   }
 });
 
-test('agents/ exists with 6 subagents', () => {
+test('agents/ exists with 7 subagents', () => {
   const agentDir = join(ROOT, 'agents');
   const files = readdirSync(agentDir).filter((f) => f.endsWith('.md'));
-  assert.equal(files.length, 6);
-  const expected = ['pm', 'extractor', 'auditor', 'mapper', 'planner', 'reviewer'];
+  assert.equal(files.length, 7);
+  const expected = ['pm', 'extractor', 'auditor', 'mapper', 'planner', 'reviewer', 'data-binder'];
   for (const name of expected) {
     assert.ok(files.includes(`design-to-code-${name}.md`), `missing agent: design-to-code-${name}.md`);
   }
@@ -60,15 +60,15 @@ test('hooks/ exists with 2 executable shell scripts', () => {
   }
 });
 
-test('templates/ has 7 templates + 10 gate-failures + 2 example configs', () => {
+test('templates/ has 7 templates + 11 gate-failures + 2 example configs', () => {
   const dir = join(ROOT, 'templates');
   const expected = ['plan.md', 'slice-pr-body.md', 'swap-pr-body.md', 'retro-section.md', 'designer-handoff.md', 'spike.md', 'dashboard.md', 'config.example.yaml', 'token-map.example.yaml'];
   for (const f of expected) {
     assert.ok(existsSync(join(dir, f)), `missing template: ${f}`);
   }
   const gateFailures = readdirSync(join(dir, 'gate-failures')).filter((f) => f.endsWith('.md'));
-  assert.equal(gateFailures.length, 10);
-  for (let i = 0; i <= 9; i++) {
+  assert.equal(gateFailures.length, 11);
+  for (let i = 0; i <= 10; i++) {
     assert.ok(gateFailures.some((f) => f.startsWith(`${i}-`)), `missing gate-failure for gate ${i}`);
   }
 });

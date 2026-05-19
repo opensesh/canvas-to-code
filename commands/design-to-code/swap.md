@@ -1,11 +1,11 @@
 ---
-description: "Run Gate 8 preflight + generate the final swap PR body."
+description: "Run Gate 9 preflight + generate the final swap PR body."
 allowed-tools: Read, Write, Edit, Bash, Task
 ---
 
 # /design-to-code:swap — Final swap
 
-The cheap-to-revert PR that moves the parallel route's content into the production route and deletes dropped routes. Runs Gate 8 preflight.
+The cheap-to-revert PR that moves the parallel route's content into the production route and deletes dropped routes. Runs Gate 9 preflight.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ The cheap-to-revert PR that moves the parallel route's content into the producti
 
 ## What it does
 
-### Gate 8 — Pre-swap
+### Gate 9 — Pre-swap
 
 PM verifies:
 
@@ -27,7 +27,7 @@ PM verifies:
 
 Each unticked item is surfaced explicitly. PM refuses to advance until they're resolved or explicitly waived.
 
-### After Gate 8 passes
+### After Gate 9 passes
 
 1. Draft the swap PR body from `templates/swap-pr-body.md`:
    - Summary

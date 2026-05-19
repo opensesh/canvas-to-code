@@ -1,4 +1,4 @@
-# Gate 6 — Slice plan needs review
+# Gate 7 — Slice plan needs review
 
 I've drafted a slice plan from the component map. One or more slices fall outside guidance:
 

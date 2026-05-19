@@ -19,9 +19,9 @@ Agents are spawned by these primary commands:
 - `/design-to-code:start` — Spawns `design-to-code-pm` for Gate 0 intake.
 - `/design-to-code:plan <feature>` — Spawns `-auditor`, `-extractor`, `-mapper`, `-planner` (Gates 3–6).
 - `/design-to-code:validate <feature>` — Re-runs `-mapper` standalone (Gate 5).
-- `/design-to-code:slice <n>` — PM runs Gate 7 preflight.
-- `/design-to-code:swap` — PM runs Gate 8 preflight.
-- `/design-to-code:retro` — PM runs Gate 9 then a conversational retro.
+- `/design-to-code:slice <n>` — PM runs Gate 8 preflight.
+- `/design-to-code:swap` — PM runs Gate 9 preflight.
+- `/design-to-code:retro` — PM runs Gate 10 then a conversational retro.
 - `/design-to-code:dashboard` — No agent; reads `state/*/status.json` + git + GitHub.
 - `/design-to-code:review <pr>` — Spawns `-reviewer`.
 

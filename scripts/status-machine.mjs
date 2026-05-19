@@ -4,7 +4,7 @@
 // The PM agent and the commands all funnel through these functions so the
 // state transitions are testable without invoking a live LLM.
 
-export const GATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+export const GATES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const PHASES = ['intake', 'plan', 'slice', 'swap', 'retro', 'complete'];
 
@@ -80,13 +80,11 @@ export function canAdvance(status, targetGate) {
  */
 export function derivePhase(status) {
   const g = highestPassedGate(status);
-  if (g < 1) return 'intake';
-  if (g < 5) return 'intake';      // gates 1–4 are still intake/planning prep
-  if (g < 6) return 'plan';
-  if (g < 7) return 'plan';
-  if (g < 8) return 'slice';
-  if (g < 9) return 'swap';
-  return 'retro';
+  if (g < 5) return 'intake';     // gates 0–4: intake / target audit / scope
+  if (g < 8) return 'plan';       // gates 5–7: mapper, data-binding, planner
+  if (g < 9) return 'slice';      // gate 8: pre-slice
+  if (g < 10) return 'swap';      // gate 9: pre-swap
+  return 'retro';                 // gate 10: pre-retro
 }
 
 /**

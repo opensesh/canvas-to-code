@@ -46,7 +46,7 @@ Mapper produces:
 
 PM surfaces low-confidence rows + net-new units. Refuses to advance until every flagged row is acknowledged.
 
-### Gate 6 — Slice plan
+### Gate 7 — Slice plan
 
 PM proposes a slice plan using the rhythm from `config.yaml.default_phase_rhythm`. Each slice: title, slug, LOC budget, files (from the mapping), dependencies, verify steps. Slices >550 LOC trigger a split proposal.
 

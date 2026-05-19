@@ -1,4 +1,4 @@
-# Gate 8 — Pre-swap check failed
+# Gate 9 — Pre-swap check failed
 
 Can't draft the swap PR until all the upstream work is verified.
 

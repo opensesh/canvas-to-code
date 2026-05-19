@@ -102,7 +102,14 @@ test('derivePhase escalates with gates', () => {
   s = logGate(s, { gate: 4, result: 'pass' });
   s = logGate(s, { gate: 5, result: 'pass' });
   assert.equal(derivePhase(s), 'plan');
-  s = logGate(s, { gate: 6, result: 'pass' });
-  s = logGate(s, { gate: 7, result: 'pass' });
+  s = logGate(s, { gate: 6, result: 'pass' });   // data-binding: still plan
+  assert.equal(derivePhase(s), 'plan');
+  s = logGate(s, { gate: 7, result: 'pass' });   // planner: still plan
+  assert.equal(derivePhase(s), 'plan');
+  s = logGate(s, { gate: 8, result: 'pass' });   // pre-slice: slice
   assert.equal(derivePhase(s), 'slice');
+  s = logGate(s, { gate: 9, result: 'pass' });   // pre-swap: swap
+  assert.equal(derivePhase(s), 'swap');
+  s = logGate(s, { gate: 10, result: 'pass' });  // pre-retro: retro
+  assert.equal(derivePhase(s), 'retro');
 });

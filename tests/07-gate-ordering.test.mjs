@@ -31,9 +31,9 @@ test('fail on previous gate blocks advance', () => {
   assert.equal(canAdvance(s, 3), false);
 });
 
-test('every gate transition from 0..9 must be sequential', () => {
+test('every gate transition from 0..10 must be sequential', () => {
   let s = initIntake({ feature: 'x', targetRoute: '/x', isExistingRoute: false, exportType: 'figma' });
-  for (let g = 1; g <= 9; g++) {
+  for (let g = 1; g <= 10; g++) {
     assert.equal(canAdvance(s, g), true, `gate ${g} should advance after ${g - 1} passed`);
     s = logGate(s, { gate: g, result: 'pass' });
   }
