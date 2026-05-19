@@ -1,0 +1,12 @@
+{
+  "groups": [
+    { "id": "primary",  "label": "Primary brand", "colorIds": ["aperol", "charcoal"] },
+    { "id": "neutrals", "label": "Neutrals",      "colorIds": ["vanilla", "smoke"] }
+  ],
+  "colors": [
+    { "id": "aperol",   "name": "Aperol",   "hex": "#FE5102", "role": "brand-solid" },
+    { "id": "charcoal", "name": "Charcoal", "hex": "#191919", "role": "primary"     },
+    { "id": "vanilla",  "name": "Vanilla",  "hex": "#FFFAEE", "role": "surface"     },
+    { "id": "smoke",    "name": "Smoke",    "hex": "#F5F0E8", "role": "subtle"      }
+  ]
+}

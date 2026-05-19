@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BrandHubColorsMock",
+  "type": "object",
+  "required": ["groups", "colors"],
+  "additionalProperties": false,
+  "properties": {
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "colorIds"],
+        "additionalProperties": false,
+        "properties": {
+          "id":       { "type": "string" },
+          "label":    { "type": "string" },
+          "colorIds": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "hex", "role"],
+        "additionalProperties": false,
+        "properties": {
+          "id":   { "type": "string" },
+          "name": { "type": "string" },
+          "hex":  { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "role": {
+            "type": "string",
+            "enum": ["brand-solid", "primary", "secondary", "surface", "subtle", "success", "warning", "danger"]
+          }
+        }
+      }
+    }
+  }
+}

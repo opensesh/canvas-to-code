@@ -15,20 +15,21 @@
   "started_at": "2026-05-12T18:25:00Z",
   "completed_at": "2026-05-12T20:15:00Z",
   "gateLog": [
-    { "gate": 0, "result": "pass", "atISO": "2026-05-12T18:25:00Z" },
-    { "gate": 1, "result": "pass", "atISO": "2026-05-12T18:30:00Z" },
-    { "gate": 2, "result": "pass", "atISO": "2026-05-12T18:31:00Z" },
-    { "gate": 3, "result": "pass", "atISO": "2026-05-12T18:40:00Z" },
-    { "gate": 4, "result": "pass", "atISO": "2026-05-12T18:50:00Z" },
-    { "gate": 5, "result": "pass", "atISO": "2026-05-12T19:00:00Z", "note": "47 units mapped; 2 low-conf acknowledged" },
-    { "gate": 6, "result": "pass", "atISO": "2026-05-12T19:01:00Z" },
-    { "gate": 7, "result": "pass", "atISO": "2026-05-12T19:01:30Z", "note": "slice 1" },
-    { "gate": 7, "result": "pass", "atISO": "2026-05-12T19:07:00Z", "note": "slice 2" },
-    { "gate": 7, "result": "pass", "atISO": "2026-05-12T19:21:00Z", "note": "slice 3" },
-    { "gate": 7, "result": "pass", "atISO": "2026-05-12T19:36:00Z", "note": "slice 4" },
-    { "gate": 7, "result": "pass", "atISO": "2026-05-12T19:52:00Z", "note": "slice 5" },
-    { "gate": 8, "result": "pass", "atISO": "2026-05-12T20:05:00Z" },
-    { "gate": 9, "result": "pass", "atISO": "2026-05-12T20:15:00Z" }
+    { "gate": 0,  "result": "pass", "atISO": "2026-05-12T18:25:00Z" },
+    { "gate": 1,  "result": "pass", "atISO": "2026-05-12T18:30:00Z" },
+    { "gate": 2,  "result": "pass", "atISO": "2026-05-12T18:31:00Z" },
+    { "gate": 3,  "result": "pass", "atISO": "2026-05-12T18:40:00Z" },
+    { "gate": 4,  "result": "pass", "atISO": "2026-05-12T18:50:00Z" },
+    { "gate": 5,  "result": "pass", "atISO": "2026-05-12T19:00:00Z", "note": "47 units mapped; 2 low-conf acknowledged" },
+    { "gate": 6,  "result": "pass", "atISO": "2026-05-12T19:00:30Z", "note": "4 backend, 4 mocks, 4 decorative; 1 low-conf acknowledged" },
+    { "gate": 7,  "result": "pass", "atISO": "2026-05-12T19:01:00Z" },
+    { "gate": 8,  "result": "pass", "atISO": "2026-05-12T19:01:30Z", "note": "slice 1" },
+    { "gate": 8,  "result": "pass", "atISO": "2026-05-12T19:07:00Z", "note": "slice 2" },
+    { "gate": 8,  "result": "pass", "atISO": "2026-05-12T19:21:00Z", "note": "slice 3" },
+    { "gate": 8,  "result": "pass", "atISO": "2026-05-12T19:36:00Z", "note": "slice 4" },
+    { "gate": 8,  "result": "pass", "atISO": "2026-05-12T19:52:00Z", "note": "slice 5" },
+    { "gate": 9,  "result": "pass", "atISO": "2026-05-12T20:05:00Z" },
+    { "gate": 10, "result": "pass", "atISO": "2026-05-12T20:15:00Z" }
   ],
   "slices": [
     { "n": 1, "title": "scaffold + .claude-design convention",         "slug": "scaffold",       "pr": 314, "merged": true, "merged_at": "2026-05-12T19:01:16Z", "loc": 150, "commits": ["92c490df"] },
@@ -57,7 +58,25 @@
       "net-new":       { "reused":  0, "new":  3 }
     },
     "lowConfidenceCount": 0,
-    "iconGaps": ["slack", "asterisk-4-point"]
+    "iconGaps": ["slack", "asterisk-4-point"],
+    "dataBindings": {
+      "rollup": { "backend": 4, "mock": 4, "none": 4 },
+      "lowConfidenceCount": 1,
+      "filesToWrite": [
+        { "path": "data/brand-hub/tokens.mock.json",          "kind": "mock"   },
+        { "path": "data/brand-hub/tokens.schema.json",        "kind": "schema" },
+        { "path": "types/mocks/brand-hub-tokens.ts",          "kind": "type"   },
+        { "path": "data/brand-hub/design-system.mock.json",   "kind": "mock"   },
+        { "path": "data/brand-hub/design-system.schema.json", "kind": "schema" },
+        { "path": "types/mocks/brand-hub-design-system.ts",   "kind": "type"   },
+        { "path": "data/brand-hub/overview.mock.json",        "kind": "mock"   },
+        { "path": "data/brand-hub/overview.schema.json",      "kind": "schema" },
+        { "path": "types/mocks/brand-hub-overview.ts",        "kind": "type"   },
+        { "path": "data/brand-hub/history.mock.json",         "kind": "mock"   },
+        { "path": "data/brand-hub/history.schema.json",       "kind": "schema" },
+        { "path": "types/mocks/brand-hub-history.ts",         "kind": "type"   }
+      ]
+    }
   },
   "scope": {
     "routes_added": ["/brand-hub/illustrations", "/design-system"],
