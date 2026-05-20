@@ -11,6 +11,7 @@ Shared mental model for designers, engineers, and reviewers working through a Ca
 
 - Any `/canvas-to-code:*` command is in flight.
 - The user mentions `tier`, `base`, `ds`, `custom-shared`, `custom-page`, `net-new`, `slice`, `swap`, `bridge`, `keystone`, or one of the gate names.
+- The user mentions `iter`, `iter shape`, `flat shape`, `source-meta`, `metaVersion`, `bridge-ready`, `producer skill`, or `source-snapshot` — see also the dedicated [`canvas-to-code-source-shapes`](./canvas-to-code-source-shapes.md) skill.
 
 ## The component tier model
 
@@ -62,6 +63,22 @@ LOC budgets are guidelines, not laws. Mapper proposes splits when a slice exceed
 | 10 | Pre-retro | PM | Typecheck/build failing → remediate first. |
 
 Gate 5 is the keystone — the artefact that earns the bridge its keep. Every visual unit categorized; every hex mapped; every icon gap flagged. Gate 6 extends it: every unit also gets a clear data source (backend / mock / none) so designers and developers iterate against the same contract.
+
+## Source-shape vocabulary (v0.4.0+)
+
+The bridge accepts two source shapes. See [`canvas-to-code-source-shapes`](./canvas-to-code-source-shapes.md) for the full reference. Quick glossary:
+
+| Term | What it means |
+|---|---|
+| **flat shape** | `.claude-design/<feature>/review.html` + `screenshots/`. The original shape; how external tools (Claude Design, Figma, V0, Lovable, Webflow) land. |
+| **iter shape** | A `iter-NN-<slug>/` subfolder emitted by a producer skill, with a v2-compliant `source-meta.yaml` and pre-extracted JSX. The iter IS the handoff. |
+| **producer skill** | A skill in the consumer's codebase that emits iter folders (e.g. BOS's `/paper-design`). Owns the canonical v2 schema. |
+| **source-meta v2** | YAML contract at the top of every iter's `source-meta.yaml`. Seven required fields the bridge reads at Gate 1. |
+| **metaVersion** | Schema version field. The bridge rejects unknown values loudly. v2 is current. |
+| **bridge-ready** | An iter has `metaVersion: 2`, all seven v2 fields, and resolvable `jsxPath` + `primaryScreenshot`. Producer skills surface this as a readiness check. |
+| **source-snapshot** | What Gate 1 writes when ingesting an iter: a frozen copy of source-meta + JSX + screenshots into `.design-to-code/state/<feature>/source-snapshot/`. The bridge reads from the snapshot for the rest of the run, not the live iter folder. |
+
+Canonical schema: [BOS paper-design SKILL.md § Source-meta v2](https://github.com/open-session/BOS-3.0/blob/feat/frontend-only-rewrite/.claude/skills/paper-design/SKILL.md#source-meta-v2-schema-the-bridge-contract).
 
 ## The parallel-route pattern
 

@@ -5,17 +5,14 @@ description: Editor-time lint reminders for projects using Canvas-to-Code. Auto-
 
 # Canvas-to-Code Guardrails
 
-You are editing in a project that uses the Canvas-to-Code plugin. Apply these seven editor-time reminders **inline** as you write or edit code. Severity is consumer-controlled via `.design-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
+You are editing in a project that uses the Canvas-to-Code plugin. Apply these eight reminders **inline** as you write or edit code (rules 1–7) or design sources (rule 8). Severity is consumer-controlled via `.design-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
 
 ## When to apply
 
-- The repo contains a `.claude-design/` folder (committed design sources).
-- You are editing a file under `app/`, `components/`, `lib/`, or `hooks/`.
-- Or: the user explicitly invokes a `/canvas-to-code:*` command.
+- **Rules 1–7 (code edits):** the repo contains a `.claude-design/` folder AND you are editing a file under `app/`, `components/`, `lib/`, or `hooks/`. Or the user explicitly invokes a `/canvas-to-code:*` command. Skip for non-component code (config files, docs, tests, scripts).
+- **Rule 8 (source-meta compliance):** you are editing a `source-meta.yaml` under `.claude-design/<feature>/[<subpage>/<tool>/iter-*/]`. Fires on producer-emitted iter folders specifically.
 
-Skip these reminders for non-component code (config files, docs, tests, scripts).
-
-## The seven rules
+## The eight rules
 
 ### 1. `devProps` naming exactness
 
@@ -109,13 +106,52 @@ import { Tabs } from '@/components/base/application/tabs/tabs';
 </div>
 ```
 
+### 8. source-meta v2 compliance (iter folders)
+
+When editing a `source-meta.yaml` inside an iter folder (`.claude-design/<feature>/<subpage>/<tool>/iter-NN-<slug>/`), the seven v2 fields are non-negotiable.
+
+```yaml
+# ✅ — bridge-ready
+metaVersion: 2
+source: paper
+feature: brand-hub
+subpage: colors
+targetRoute: /brand-hub/colors
+jsxPath: jsx/brand-hub-colors.tsx
+primaryScreenshot: screenshots/01-baseline.png
+```
+
+```yaml
+# ❌ — missing metaVersion (Gate 1 will reject)
+source: paper
+feature: brand-hub
+```
+
+```yaml
+# ❌ — `source: paper` in a flat-shape feature root (Paper outputs should be iter-shaped)
+# at .claude-design/brand-hub/source-meta.yaml — no iter folder
+source: paper
+```
+
+Variants to flag inline:
+
+- `jsxPath` set but the referenced file doesn't exist
+- `primaryScreenshot` set but the referenced file doesn't exist
+- `metaVersion` set to anything other than `2` (v1 iters need backfill; v3+ doesn't exist yet)
+- `feature` or `subpage` value doesn't match the iter's folder path (e.g. iter at `brand-hub/colors/paper/iter-01/` but source-meta says `feature: brain`)
+- All seven required fields present but the user is hand-editing without going through the producer skill — recommend re-running the producer (e.g. `/paper-design`) instead, so JSX + screenshots regenerate consistently
+
+For deeper readiness checks (visual stability, route decision, in-flight bridge run), escalate to the producer skill's inspect workflow — e.g. BOS's `/paper-design inspect` surfaces Bridge-ready vs Bridge-pending across all iters in the repo.
+
+The full v2 contract lives in the producer: [BOS paper-design SKILL.md § Source-meta v2](https://github.com/open-session/BOS-3.0/blob/feat/frontend-only-rewrite/.claude/skills/paper-design/SKILL.md#source-meta-v2-schema-the-bridge-contract). The bridge-side reference lives in [`canvas-to-code-source-shapes`](./canvas-to-code-source-shapes.md).
+
 ## How to surface a violation
 
-When you spot one of the seven, surface it like this in your edit explanation:
+When you spot a violation, surface it like this in your edit explanation:
 
 > *Note: this introduces `border-2` (guardrail 2). Replacing with `border border-border-secondary`. If this is intentional, the consumer can override per-rule via `.design-to-code/config.yaml.guardrail_overrides`.*
 
-Do not silently rewrite the user's intent — flag and correct. If the user pushes back, accept their choice and move on.
+Do not silently rewrite the user's intent — flag and correct. If the user pushes back, accept their choice and move on. For rule 8, propose a diff but never auto-edit source-meta.yaml — the producer skill owns that file's content.
 
 ---
 
