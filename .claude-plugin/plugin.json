@@ -1,17 +1,17 @@
 {
-  "name": "design-to-code-bridge",
-  "version": "0.2.0",
-  "description": "Translate design exports (HTML + screenshot) into design-system-aligned code through eleven explicit gates",
+  "name": "canvas-to-code",
+  "version": "0.3.0",
+  "description": "Translate canvas designs (HTML + screenshot) into design-system-aligned code through eleven explicit gates",
   "author": {
     "name": "Open Session",
     "email": "hello@opensession.co"
   },
-  "repository": "https://github.com/opensesh/design-to-code-bridge",
-  "homepage": "https://github.com/opensesh/design-to-code-bridge",
+  "repository": "https://github.com/opensesh/canvas-to-code",
+  "homepage": "https://github.com/opensesh/canvas-to-code",
   "keywords": [
     "claude-code",
     "claude-plugin",
-    "design-to-code",
+    "canvas-to-code",
     "design-systems",
     "design-handoff",
     "figma",

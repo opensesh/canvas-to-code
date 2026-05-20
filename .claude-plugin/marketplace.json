@@ -1,6 +1,6 @@
 {
-  "name": "design-to-code-bridge-marketplace",
-  "description": "Single-plugin marketplace for the Design-to-Code Bridge — translates design exports (HTML + screenshot) into design-system-aligned code through eleven explicit gates.",
+  "name": "canvas-to-code-marketplace",
+  "description": "Single-plugin marketplace for Canvas-to-Code — translates canvas designs (HTML + screenshot) into design-system-aligned code through eleven explicit gates.",
   "owner": {
     "name": "Open Session",
     "email": "hello@opensession.co",
@@ -8,10 +8,10 @@
   },
   "plugins": [
     {
-      "name": "design-to-code-bridge",
+      "name": "canvas-to-code",
       "source": {
         "source": "github",
-        "repo": "opensesh/design-to-code-bridge",
+        "repo": "opensesh/canvas-to-code",
         "path": "."
       }
     }
