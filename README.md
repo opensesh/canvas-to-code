@@ -103,13 +103,13 @@ Both paths reliably pick up new versions because every release bumps `.claude-pl
 
 ## Consumer setup — the two files you own
 
-Project-specific config lives in your repo at `.design-to-code/`. Two files make the bridge yours.
+Project-specific config lives in your repo at `.canvas-to-code/`. Two files make the bridge yours.
 
-### `.design-to-code/config.yaml`
+### `.canvas-to-code/config.yaml`
 
 Gate severities, slice LOC budget, branch patterns, dashboard output path. Copy from [`templates/config.example.yaml`](./templates/config.example.yaml) and adjust.
 
-### `.design-to-code/token-map.yaml`
+### `.canvas-to-code/token-map.yaml`
 
 Your design system's hex → semantic-token mappings, plus font substitutions, focus-ring pattern, disabled-state pattern. **This is the file that makes the bridge yours.** Copy from [`templates/token-map.example.yaml`](./templates/token-map.example.yaml) and seed from your own `brand.css` / design-tokens CSS.
 
@@ -134,7 +134,7 @@ disabled_bg: "disabled:bg-bg-disabled_subtle"
 
 Committed design sources, one folder per feature. Always: `review.html`, a `screenshots/` folder with ≥1 PNG, and `source-meta.yaml` declaring the design tool. Iterating later? Re-run `/canvas-to-code:start` and the PM picks up from `status.json` — the discovery scan offers to resume.
 
-### `.design-to-code/state/<feature>/status.json`
+### `.canvas-to-code/state/<feature>/status.json`
 
 Per-feature state. Gitignored by default. Holds `phase`, `gateLog[]`, `componentMap`, `slices[]`. The single source of truth for the dashboard.
 
@@ -160,24 +160,9 @@ Three commands. Five flags. The PM agent does everything else.
 | `--pr <num>` | `start` | Validate a slice PR against the plan; spawns the reviewer agent. |
 | `--json` | `dashboard`, `assets` | Emit machine-readable output. |
 
-### Upgrading from 0.2.x
+### Upgrading mid-flight features
 
-The plugin namespace changed (`/design-to-code-bridge:design-to-code:*` → `/canvas-to-code:*`) and 10 commands collapsed to 3. Mapping:
-
-| old | new |
-|---|---|
-| `/design-to-code:start` | `/canvas-to-code:start` |
-| `/design-to-code:prep <f>` | `/canvas-to-code:start --feature <f> --prep` |
-| `/design-to-code:plan <f>` | `/canvas-to-code:start --feature <f>` (auto-runs Gates 3–7) |
-| `/design-to-code:validate <f>` | `/canvas-to-code:start --feature <f> --gate 5` |
-| `/design-to-code:slice <n>` | `/canvas-to-code:start --gate 8` |
-| `/design-to-code:swap` | `/canvas-to-code:start --gate 9` |
-| `/design-to-code:retro` | `/canvas-to-code:start --gate 10` |
-| `/design-to-code:review <pr>` | `/canvas-to-code:start --pr <num>` |
-| `/design-to-code:status [<f>]` | `/canvas-to-code:dashboard [--feature <f>]` |
-| `/design-to-code:dashboard` | `/canvas-to-code:dashboard` |
-
-Mid-flight features keep working — `status.json` is forward-compatible, and the PM backfills new timestamp fields on first read.
+`status.json` is forward-compatible across versions. On first read the PM backfills any missing fields (lifecycle timestamps, source-shape) and migrates the consumer's state directory from any legacy path to `.canvas-to-code/state/` automatically. No manual steps required.
 
 ---
 
@@ -224,7 +209,7 @@ A subfolder ending in `iter-NN-<slug>` with a v2-compliant `source-meta.yaml`. T
   screenshots/01-*.png
 ```
 
-When you pick an iter at Gate 0, the bridge snapshots `source-meta.yaml`, the JSX, and the screenshots into `.design-to-code/state/<feature>/source-snapshot/` (Gate 1). Gate 5a then short-circuits the HTML extractor and copies the snapshot JSX straight to `/tmp/<feature>-template.tsx` — the lossiest gate in the pipeline becomes a no-op.
+When you pick an iter at Gate 0, the bridge snapshots `source-meta.yaml`, the JSX, and the screenshots into `.canvas-to-code/state/<feature>/source-snapshot/` (Gate 1). Gate 5a then short-circuits the HTML extractor and copies the snapshot JSX straight to `/tmp/<feature>-template.tsx` — the lossiest gate in the pipeline becomes a no-op.
 
 #### source-meta v2 schema (the bridge contract)
 
@@ -262,7 +247,7 @@ When auto-detect is ambiguous on a flat folder, `.claude-design/<feature>/source
 
 ## Adapting for other projects / design systems
 
-This plugin originated at [Open Session](https://opensession.co) for the BOS codebase, but the BOS-specific bits live entirely in your `.design-to-code/` config and token map. To adapt:
+This plugin originated at [Open Session](https://opensession.co) for the BOS codebase, but the BOS-specific bits live entirely in your `.canvas-to-code/` config and token map. To adapt:
 
 1. Replace `token-map.yaml` with your DS tokens. The mapper produces token suggestions; the map tells it which suggestions to make.
 2. Replace `config.yaml.components_dirs` with your component-folder layout (e.g. `components/`, `packages/ui/`, `src/components/`).
@@ -274,9 +259,9 @@ The gates, the PM flow, and the dashboard work unchanged. You don't fork; you co
 
 ## Status
 
-**v0.4.0 — Iter folders as first-class sources.** The Gate 0 picker scans `.claude-design/` for v2-compliant `iter-*` folders alongside active features and loose materials, then presents one unified menu. Selecting an iter auto-fills Gate 0 from `source-meta.yaml` (feature, subpage, route, source). Gate 1 snapshots the iter; Gate 5a short-circuits the HTML extractor and copies the iter's pre-extracted JSX directly. `status.json` gains `subpage`, `sourceShape`, and `sourceIterPath` — additive only; pre-0.4.0 features backfill silently. Adds `paper` to the source enum (DS-aligned pass at Gate 2). Internal agent rename `design-to-code-*` → `canvas-to-code-*` completes (deferred from v0.3.0). Flat shape still works unchanged.
+**v0.4.0 — Iter folders as first-class sources.** The Gate 0 picker scans `.claude-design/` for v2-compliant `iter-*` folders alongside active features and loose materials, then presents one unified menu. Selecting an iter auto-fills Gate 0 from `source-meta.yaml` (feature, subpage, route, source). Gate 1 snapshots the iter; Gate 5a short-circuits the HTML extractor and copies the iter's pre-extracted JSX directly. `status.json` gains `subpage`, `sourceShape`, and `sourceIterPath` — additive only; pre-0.4.0 features backfill silently. Adds `paper` to the source enum (DS-aligned pass at Gate 2). Consumer-repo state directory renamed to `.canvas-to-code/`; PM auto-migrates on first spawn. Flat shape still works unchanged.
 
-**v0.3.0 — Canvas-to-Code.** Rebranded from `design-to-code-bridge`. Slash-command surface collapsed from 10 commands to 3 (`start`, `dashboard`, `assets`), with a 5-flag set (`--feature`, `--gate`, `--prep`, `--pr`, `--json`). `start` now opens with a guided discovery scan of `.claude-design/` so the first thing the user sees is what already exists. `status.json` gains lifecycle timestamps (created_at, last_touched_at, completed_at + per-slice merged_at and pr_number); the PM backfills these silently on pre-0.3.0 files. **Breaking change** — see the Upgrading section above.
+**v0.3.0 — Three commands, five flags.** Slash-command surface collapsed from 10 commands to 3 (`start`, `dashboard`, `assets`), with a 5-flag set (`--feature`, `--gate`, `--prep`, `--pr`, `--json`). `start` now opens with a guided discovery scan of `.claude-design/` so the first thing the user sees is what already exists. `status.json` gains lifecycle timestamps (created_at, last_touched_at, completed_at + per-slice merged_at and pr_number); the PM backfills these silently on older files.
 
 See the canonical spec: [BOS-3.0 code-bridge spike](https://github.com/opensesh/BOS-3.0/blob/main/docs/spikes/design-system/2026-05/2026-05-12-code-bridge-standardization.md) (`docs/spikes/design-system/2026-05/2026-05-12-code-bridge-standardization.md` in the BOS repo).
 

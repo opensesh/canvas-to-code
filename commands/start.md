@@ -6,7 +6,7 @@ argument-hint: "[--feature <name>] [--gate <n>] [--prep] [--pr <num>]"
 
 # /canvas-to-code:start — Universal workflow entry
 
-One command, all eleven gates. Spawns `@canvas-to-code-pm.md`, which inspects `.claude-design/` and `.design-to-code/state/`, then routes by flag or by current phase.
+One command, all eleven gates. Spawns `@canvas-to-code-pm.md`, which inspects `.claude-design/` and `.canvas-to-code/state/`, then routes by flag or by current phase.
 
 ## How it dispatches
 
@@ -63,7 +63,7 @@ If `.claude-design/` is empty or absent, the menu collapses to options 5 + 6 onl
 | Gate | Name | Driver |
 |---|---|---|
 | 0 | Intake | PM conversation (feature, route, materials, source tool) |
-| 1 | Materials check | PM (verifies `review.html` + ≥1 screenshot for flat shape; snapshots `source-meta.yaml` + JSX + screenshots into `.design-to-code/state/<feature>/source-snapshot/` for iter shape) |
+| 1 | Materials check | PM (verifies `review.html` + ≥1 screenshot for flat shape; snapshots `source-meta.yaml` + JSX + screenshots into `.canvas-to-code/state/<feature>/source-snapshot/` for iter shape) |
 | 2 | DS alignment | PM (verifies `source-meta.yaml`, tokens, lint heuristics) |
 | 3 | Target surface audit | `@canvas-to-code-auditor.md` |
 | 4 | Scope confirmation | PM conversation |
@@ -78,7 +78,7 @@ PM auto-advances slice → slice → swap → retro when all prerequisites are m
 
 ## State
 
-PM reads and writes `.design-to-code/state/<feature>/status.json`. Every gate transition appends to `gateLog[]` with an ISO timestamp. The dashboard reads from this file.
+PM reads and writes `.canvas-to-code/state/<feature>/status.json`. Every gate transition appends to `gateLog[]` with an ISO timestamp. The dashboard reads from this file.
 
 ## Re-running
 
@@ -87,7 +87,7 @@ Re-running `/canvas-to-code:start` mid-flow is always safe. With no flags it sho
 ## Failure modes
 
 - **Config missing** — PM emits a friendly error pointing at `templates/config.example.yaml` and exits.
-- **`<feature>` doesn't exist** in `.design-to-code/state/` → PM lists what does, then offers to start a new one with that slug.
+- **`<feature>` doesn't exist** in `.canvas-to-code/state/` → PM lists what does, then offers to start a new one with that slug.
 - **`--gate 5` on a feature with no prior `componentMap`** → PM suggests dropping the flag (run the workflow normally to reach Gate 5 the first time).
 - **`--pr <n>` head branch doesn't match `<feature>-pr-<n>-<slug>`** → reviewer warns "running guardrails-only" and continues.
 - **`gh` not authenticated** (for `--pr`) → command prints `gh auth status` and exits.

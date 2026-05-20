@@ -26,7 +26,7 @@ test('marketplace.json parses and points at the renamed repo', () => {
   assert.equal(m.plugins[0].source.repo, 'opensesh/canvas-to-code');
 });
 
-test('commands/ exists with 3 files (flattened from commands/design-to-code/)', () => {
+test('commands/ exists with 3 files at the flat top level', () => {
   const cmdDir = join(ROOT, 'commands');
   assert.ok(existsSync(cmdDir), 'commands dir exists');
   const files = readdirSync(cmdDir).filter((f) => f.endsWith('.md'));
@@ -35,11 +35,13 @@ test('commands/ exists with 3 files (flattened from commands/design-to-code/)', 
   for (const name of expected) {
     assert.ok(files.includes(`${name}.md`), `missing command: ${name}.md`);
   }
-  // The old subdirectory must be gone — its presence creates a doubled namespace.
-  assert.ok(!existsSync(join(cmdDir, 'design-to-code')), 'old commands/design-to-code/ subdirectory must be removed');
+  // No subdirectories under commands/ — a nested layer would create a doubled
+  // slash-command namespace and break the picker.
+  const subdirs = readdirSync(cmdDir, { withFileTypes: true }).filter((d) => d.isDirectory());
+  assert.equal(subdirs.length, 0, `commands/ must be flat; found subdirs: ${subdirs.map((d) => d.name).join(', ')}`);
 });
 
-test('agents/ exists with 7 subagents', () => {
+test('agents/ exists with 7 canvas-to-code-* subagents', () => {
   const agentDir = join(ROOT, 'agents');
   const files = readdirSync(agentDir).filter((f) => f.endsWith('.md'));
   assert.equal(files.length, 7);
@@ -47,17 +49,23 @@ test('agents/ exists with 7 subagents', () => {
   for (const name of expected) {
     assert.ok(files.includes(`canvas-to-code-${name}.md`), `missing agent: canvas-to-code-${name}.md`);
   }
-  for (const name of expected) {
-    assert.ok(!files.includes(`design-to-code-${name}.md`), `legacy design-to-code-${name}.md must be removed`);
+  // Every agent filename must start with canvas-to-code- (positive guard
+  // replaces the earlier negative check against the legacy prefix).
+  for (const f of files) {
+    assert.ok(f.startsWith('canvas-to-code-'), `agent ${f} must use the canvas-to-code- prefix`);
   }
 });
 
-test('skills/ exists with 2 skills', () => {
+test('skills/ exists with 3 canvas-to-code-* skills', () => {
   const dir = join(ROOT, 'skills');
   const files = readdirSync(dir).filter((f) => f.endsWith('.md'));
-  assert.equal(files.length, 2);
-  assert.ok(files.includes('canvas-to-code-guardrails.md'));
-  assert.ok(files.includes('canvas-to-code-vocabulary.md'));
+  assert.equal(files.length, 3);
+  for (const name of ['canvas-to-code-guardrails.md', 'canvas-to-code-vocabulary.md', 'canvas-to-code-source-shapes.md']) {
+    assert.ok(files.includes(name), `missing skill: ${name}`);
+  }
+  for (const f of files) {
+    assert.ok(f.startsWith('canvas-to-code-'), `skill ${f} must use the canvas-to-code- prefix`);
+  }
 });
 
 test('hooks/ exists with 2 executable shell scripts', () => {

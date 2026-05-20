@@ -25,7 +25,7 @@ test('PM agent describes the source-snapshot target directory', () => {
   const content = loadPm();
   assert.ok(
     content.includes('source-snapshot'),
-    'PM must mention the source-snapshot directory under .design-to-code/state/<feature>/',
+    'PM must mention the source-snapshot directory under .canvas-to-code/state/<feature>/',
   );
 });
 

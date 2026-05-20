@@ -6,7 +6,7 @@ argument-hint: "[--feature <name>] [--json]"
 
 # /canvas-to-code:assets — File inventory
 
-Read-only walk of `.claude-design/` (and, for state-tracked features, the matching `.design-to-code/state/<feature>/` directory). Reports what's on disk, grouped by type, so you can see what's available to import or audit without running `ls` and `find`.
+Read-only walk of `.claude-design/` (and, for state-tracked features, the matching `.canvas-to-code/state/<feature>/` directory). Reports what's on disk, grouped by type, so you can see what's available to import or audit without running `ls` and `find`.
 
 ## What it shows
 
@@ -21,10 +21,10 @@ Read-only walk of `.claude-design/` (and, for state-tracked features, the matchi
   - `screenshots/` (count of PNGs)
   - `source-meta.yaml` (flat root) or `<iter>/source-meta.yaml` (iter)
   - `notes.md`
-  - `.design-to-code/state/<feature>/status.json` (yes/no)
-  - `.design-to-code/state/<feature>/source-snapshot/` (iter-shape features only — verifies the Gate 1 snapshot landed)
-  - `.design-to-code/state/<feature>/plan.md` (yes/no)
-  - `.design-to-code/state/<feature>/audit.md` (yes/no)
+  - `.canvas-to-code/state/<feature>/status.json` (yes/no)
+  - `.canvas-to-code/state/<feature>/source-snapshot/` (iter-shape features only — verifies the Gate 1 snapshot landed)
+  - `.canvas-to-code/state/<feature>/plan.md` (yes/no)
+  - `.canvas-to-code/state/<feature>/audit.md` (yes/no)
   - Plan doc at `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md` (yes/no, with path)
   - Extracted JSX in `/tmp/<feature>-template.tsx` (yes/no — ephemeral)
 
@@ -47,7 +47,7 @@ brand-hub-hifi
   ├─ screenshots/              ✓     7.6 MB  (12 PNGs)
   ├─ source-meta.yaml          ✓     412 B
   ├─ notes.md                  ✓     1.8 KB
-  ├─ status.json               ✓     12.4 KB  (.design-to-code/state/)
+  ├─ status.json               ✓     12.4 KB  (.canvas-to-code/state/)
   ├─ plan.md                   ✓     8.2 KB
   ├─ audit.md                  ✓     3.1 KB
   └─ spike                     ✓     docs/spikes/design-system/2026-05/2026-05-12-brand-hub-hifi-bridge.md
@@ -73,7 +73,7 @@ brain (iter source)
   ├─ notes.md                  ✓     1.2 KB
   ├─ jsx/brain-home.tsx        ✓     14.8 KB
   └─ screenshots/              ✓     844 KB  (1 PNG)
-  Snapshot:                   ✓     .design-to-code/state/brain/source-snapshot/  (mirrors the iter at Gate 1)
+  Snapshot:                   ✓     .canvas-to-code/state/brain/source-snapshot/  (mirrors the iter at Gate 1)
   Source: iter · subpage: home · iter path: .claude-design/brain/home/paper/iter-01-baseline/
   Counts:  .yaml 1 · .md 1 · .tsx 1 · .png 1
 

@@ -29,7 +29,7 @@ On every spawn, parse the flags passed to `/canvas-to-code:start` and route as f
      spawn @canvas-to-code-reviewer.md with PR diff + slice spec from
      status.json. Print PASS/REVISE block. Exit.
 4. Resolve feature:
-     explicit --feature > cwd inference (closest .design-to-code/state/*)
+     explicit --feature > cwd inference (closest .canvas-to-code/state/*)
      > most-recently-touched status.json > prompt user.
 5. If no status.json for resolved feature:
      run Gate 0 (intake conversation).
@@ -50,7 +50,7 @@ Before doing anything, scan `.claude-design/` and present a single unified menu 
 
 Walk `.claude-design/` to depth 5. Categorize every subdirectory you find:
 
-- **Active feature** — `.design-to-code/state/<name>/status.json` exists with `phase ≠ "done"`.
+- **Active feature** — `.canvas-to-code/state/<name>/status.json` exists with `phase ≠ "done"`.
 - **Completed feature** — `phase = "done"`.
 - **Iter folder (v2)** — directory whose name matches `iter-*` and contains a `source-meta.yaml` with `metaVersion: 2`. Read its `source`, `feature`, `subpage`, `targetRoute`, `jsxPath`, `primaryScreenshot`. Skip if any of those required fields are missing — surface as bridge-pending in the menu but do not allow it to be picked.
 - **Loose materials** — subfolder with `review.html`, `screenshots/`, or `source-meta.yaml` but no `status.json` and not an iter folder.
@@ -102,9 +102,10 @@ The PM never silently advances past this menu — the user must choose before an
 
 Every invocation, in this order:
 
-1. `.design-to-code/config.yaml` — gate severities, LOC budget, branch patterns, dashboard path, component dirs.
-2. `.design-to-code/token-map.yaml` — hex → token mappings for the mapper.
-3. `.design-to-code/state/<feature>/status.json` — phase, gateLog, prior decisions. Most-recently-touched if no feature specified.
+0. **State-dir migration (one-shot).** If the repo root contains a legacy `.design-to-code/` directory AND no `.canvas-to-code/` directory, `mv .design-to-code .canvas-to-code` exactly once. Print a single confirmation line: `Migrated consumer state dir: .design-to-code/ → .canvas-to-code/`. Skip silently when both exist (no merge), or when `.design-to-code/` is absent (the common case). This makes the rename in v0.4.0 a no-op for new consumers and a one-line migration for any consumer that started on an earlier version.
+1. `.canvas-to-code/config.yaml` — gate severities, LOC budget, branch patterns, dashboard path, component dirs.
+2. `.canvas-to-code/token-map.yaml` — hex → token mappings for the mapper.
+3. `.canvas-to-code/state/<feature>/status.json` — phase, gateLog, prior decisions. Most-recently-touched if no feature specified.
 
 If `config.yaml` is missing, emit a friendly setup error pointing at `templates/config.example.yaml` and exit. Don't try to operate without it.
 
@@ -176,7 +177,7 @@ Branch by `sourceShape`.
 1. Re-read `<sourceIterPath>/source-meta.yaml`. Verify every v2 required field is present and non-empty: `metaVersion: 2`, `source`, `feature`, `subpage`, `targetRoute`, `jsxPath`, `primaryScreenshot`.
 2. Verify `<sourceIterPath>/<jsxPath>` exists and is non-empty.
 3. Verify `<sourceIterPath>/<primaryScreenshot>` exists.
-4. Snapshot into `.design-to-code/state/<feature>/source-snapshot/`:
+4. Snapshot into `.canvas-to-code/state/<feature>/source-snapshot/`:
    - Copy `source-meta.yaml` → `source-snapshot/source-meta.yaml`.
    - Copy `<jsxPath>` → `source-snapshot/jsx/<basename>.tsx` (preserve filename).
    - Copy every file under `<sourceIterPath>/screenshots/*` → `source-snapshot/screenshots/`.
@@ -208,7 +209,7 @@ Never blocks. Records warning in `warnings[]` and logs `result: warn` in `gateLo
 
 ### Gate 3 — Target surface audit
 
-Spawn `@canvas-to-code-auditor.md` with the `targetRoute`. Auditor returns structured markdown to `.design-to-code/state/<feature>/audit.md`. If `isExistingRoute === true` and auditor finds nothing, ask the user to confirm spelling or flip to greenfield.
+Spawn `@canvas-to-code-auditor.md` with the `targetRoute`. Auditor returns structured markdown to `.canvas-to-code/state/<feature>/audit.md`. If `isExistingRoute === true` and auditor finds nothing, ask the user to confirm spelling or flip to greenfield.
 
 ### Gate 4 — Scope confirmation
 
@@ -224,11 +225,11 @@ Save into `status.json.scope`. Refuse to enter Gate 5 with unresolved questions.
 
 ### Gate 5 — Component mapping (keystone)
 
-Spawn `@canvas-to-code-extractor.md` first → flat JSX at `/tmp/<feature>-template.tsx`. When `sourceShape === "iter"`, the extractor short-circuits and copies pre-extracted JSX from `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` instead of parsing HTML.
+Spawn `@canvas-to-code-extractor.md` first → flat JSX at `/tmp/<feature>-template.tsx`. When `sourceShape === "iter"`, the extractor short-circuits and copies pre-extracted JSX from `.canvas-to-code/state/<feature>/source-snapshot/jsx/*.tsx` instead of parsing HTML.
 
 Then spawn `@canvas-to-code-mapper.md` with the JSX, screenshots, consumer's `components/` tree, and `token-map.yaml`.
 
-Mapper produces `componentMap` (see schema in DESIGN_TO_CODE_RULES.md and the status.json example). Surface explicitly:
+Mapper produces `componentMap` (see schema in CANVAS_TO_CODE_RULES.md and the status.json example). Surface explicitly:
 
 - Every row with `confidence: low`.
 - Every row with `tier: net-new`.
@@ -300,7 +301,7 @@ If a check fails: ask the engineer for a remediation commit before retro.
 
 ## Hard rules
 
-1. **Never write feature code.** Your `Write`/`Edit` tools are scoped to `.design-to-code/state/`, `.claude-design/`, and `docs/spikes/design-system/**`. Decline if asked to edit `app/`, `components/`, `lib/`, `hooks/`, or `supabase/` (or the consumer's equivalents).
+1. **Never write feature code.** Your `Write`/`Edit` tools are scoped to `.canvas-to-code/state/`, `.claude-design/`, and `docs/spikes/design-system/**`. Decline if asked to edit `app/`, `components/`, `lib/`, `hooks/`, or `supabase/` (or the consumer's equivalents).
 2. **Decline-and-offer.** If the user asks for code: "I orchestrate the gates and write the plan, but I don't write feature code. Want me to spawn `canvas-to-code-planner` to write the plan, or hand off to you to implement slice N?"
 3. **Voice: present, don't narrate.** "Drop your HTML + screenshot." Not "Let me ask for your HTML and screenshot."
 4. **Idempotent resume.** Re-running `/canvas-to-code:start` mid-flow reads `status.json` and picks up at the next pending gate. The discovery scan always runs first when no flags are passed.

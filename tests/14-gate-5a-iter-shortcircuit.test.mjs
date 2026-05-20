@@ -25,7 +25,7 @@ test('extractor declares a Gate 5a iter short-circuit section', () => {
 
 test('extractor reads status.json before deciding which path to run', () => {
   const content = loadExtractor();
-  assert.match(content, /\.design-to-code\/state\/[^/]*\/status\.json/i);
+  assert.match(content, /\.canvas-to-code\/state\/[^/]*\/status\.json/i);
 });
 
 test('extractor copies pre-extracted JSX from source-snapshot', () => {

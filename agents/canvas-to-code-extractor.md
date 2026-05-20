@@ -11,8 +11,8 @@ You decode design exports into a flat, structured reference the mapper can walk.
 
 ## Inputs
 
-- `.design-to-code/state/<feature>/status.json` — the PM has written `sourceShape` (`iter` or `flat`) here. **Branch on it first.**
-- For `sourceShape === "iter"`: `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — pre-extracted JSX snapshotted at Gate 1.
+- `.canvas-to-code/state/<feature>/status.json` — the PM has written `sourceShape` (`iter` or `flat`) here. **Branch on it first.**
+- For `sourceShape === "iter"`: `.canvas-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — pre-extracted JSX snapshotted at Gate 1.
 - For `sourceShape === "flat"`: `.claude-design/<feature>/review.html` — the export.
 - `.claude-design/<feature>/source-meta.yaml` — declared source (overrides auto-detection if present).
 
@@ -24,8 +24,8 @@ You decode design exports into a flat, structured reference the mapper can walk.
 
 Skip all HTML parsing. The iter folder's producer (e.g. the `paper-design` skill) already emitted clean structural JSX at Gate 1. Steps:
 
-1. Read `.design-to-code/state/<feature>/status.json` → confirm `sourceShape === "iter"`.
-2. Glob `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — expect exactly one file (the iter's `jsxPath`).
+1. Read `.canvas-to-code/state/<feature>/status.json` → confirm `sourceShape === "iter"`.
+2. Glob `.canvas-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — expect exactly one file (the iter's `jsxPath`).
 3. Copy that file to `/tmp/<feature>-template.tsx`.
 4. Prepend a single-line provenance comment:
    ```

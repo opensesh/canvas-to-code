@@ -26,7 +26,7 @@ For each: inline SVG (cheapest, 1-slice fix), batch-add to `provider-icons/` (wo
 
 ## Token-map delta
 
-{{tokenMapDelta.length}} new entries proposed for `.design-to-code/token-map.yaml`:
+{{tokenMapDelta.length}} new entries proposed for `.canvas-to-code/token-map.yaml`:
 
 {{for each tokenMapDelta entry: hex → proposed class with note}}
 

@@ -1,6 +1,6 @@
 # Design-to-Code Bridge — consumer config
 #
-# Copy this file to `.design-to-code/config.yaml` at the root of your project.
+# Copy this file to `.canvas-to-code/config.yaml` at the root of your project.
 # All fields are optional; defaults shown.
 
 # Maximum LOC per slice. Mapper proposes a split if a slice exceeds this.
@@ -40,7 +40,7 @@ guardrail_overrides: {}
 dashboard_output_path: docs/spikes/design-system/canvas-to-code-dashboard.md
 
 # Root for per-feature status.json files. State is gitignored; the folder is not.
-state_dir: .design-to-code/state
+state_dir: .canvas-to-code/state
 
 # Component-folder layout. Mapper uses these to classify visual units into tiers
 # and to verify reuse claims.

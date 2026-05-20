@@ -17,5 +17,5 @@ Did you mean one of these?
 Options:
 
 1. **Correct the spelling** — re-run `/canvas-to-code:start --feature {{feature}}` and update the route.
-2. **Switch to greenfield** — set `isExistingRoute: false` in `.design-to-code/state/{{feature}}/status.json` and I'll continue with no audit.
-3. **Cancel** — `rm -rf .design-to-code/state/{{feature}}/` to discard intake state.
+2. **Switch to greenfield** — set `isExistingRoute: false` in `.canvas-to-code/state/{{feature}}/status.json` and I'll continue with no audit.
+3. **Cancel** — `rm -rf .canvas-to-code/state/{{feature}}/` to discard intake state.

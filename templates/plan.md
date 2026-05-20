@@ -35,7 +35,7 @@ Icon gaps to resolve: {{iconGaps.join(', ')}}
 Existing entries used:
 {{token-map.yaml entries the mapper matched against}}
 
-New entries proposed (review before adding to `.design-to-code/token-map.yaml`):
+New entries proposed (review before adding to `.canvas-to-code/token-map.yaml`):
 {{tokenMapDelta entries}}
 
 ## Data plan

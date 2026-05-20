@@ -10,7 +10,7 @@ on:
       - 'skills/**'
       - 'templates/**'
       - 'scripts/**'
-      - 'DESIGN_TO_CODE_RULES.md'
+      - 'CANVAS_TO_CODE_RULES.md'
 
 permissions:
   contents: read

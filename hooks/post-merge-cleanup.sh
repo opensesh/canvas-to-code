@@ -29,7 +29,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-STATE_DIR="$REPO_ROOT/.design-to-code/state"
+STATE_DIR="$REPO_ROOT/.canvas-to-code/state"
 
 # Skip if the consumer isn't using the bridge.
 if [ ! -d "$STATE_DIR" ]; then

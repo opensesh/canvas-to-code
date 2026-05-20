@@ -15,14 +15,14 @@ Spawned by the PM during Gate 5 with:
 
 - **Extracted JSX** at `/tmp/<feature>-template.tsx` (from `canvas-to-code-extractor`).
 - **Screenshot(s)** in `.claude-design/<feature>/screenshots/`.
-- **Consumer config** at `.design-to-code/config.yaml` (specifically `components_dirs.*`).
-- **Token map** at `.design-to-code/token-map.yaml`.
-- **Audit** at `.design-to-code/state/<feature>/audit.md` (from `canvas-to-code-auditor`).
+- **Consumer config** at `.canvas-to-code/config.yaml` (specifically `components_dirs.*`).
+- **Token map** at `.canvas-to-code/token-map.yaml`.
+- **Audit** at `.canvas-to-code/state/<feature>/audit.md` (from `canvas-to-code-auditor`).
 - **The consumer's `components/` tree** — read it via `Glob` + `Read`.
 
 ## Output
 
-Write a JSON object matching the `componentMap` shape in the status.json schema. Return it to the PM (which writes it into `.design-to-code/state/<feature>/status.json`).
+Write a JSON object matching the `componentMap` shape in the status.json schema. Return it to the PM (which writes it into `.canvas-to-code/state/<feature>/status.json`).
 
 ```json
 {
@@ -94,7 +94,7 @@ Every `low` row blocks Gate 5 advancement until the engineer acknowledges or dro
 For every raw hex / off-brand font / pixel-literal spacing in the source, propose a mapped class via `token-map.yaml`.
 
 ```yaml
-# In .design-to-code/token-map.yaml the consumer has:
+# In .canvas-to-code/token-map.yaml the consumer has:
 colors:
   "#FE5102": { token: "bg-brand-solid", class: "bg-bg-brand-solid" }
 ```

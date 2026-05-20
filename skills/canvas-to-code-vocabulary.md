@@ -1,6 +1,6 @@
 ---
 name: canvas-to-code-vocabulary
-description: Vocabulary and conceptual model for Canvas-to-Code — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /canvas-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
+description: Vocabulary and conceptual model for Canvas-to-Code — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /canvas-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge", or "canvas-to-code" in context.
 ---
 
 # Canvas-to-Code Vocabulary
@@ -76,7 +76,7 @@ The bridge accepts two source shapes. See [`canvas-to-code-source-shapes`](./can
 | **source-meta v2** | YAML contract at the top of every iter's `source-meta.yaml`. Seven required fields the bridge reads at Gate 1. |
 | **metaVersion** | Schema version field. The bridge rejects unknown values loudly. v2 is current. |
 | **bridge-ready** | An iter has `metaVersion: 2`, all seven v2 fields, and resolvable `jsxPath` + `primaryScreenshot`. Producer skills surface this as a readiness check. |
-| **source-snapshot** | What Gate 1 writes when ingesting an iter: a frozen copy of source-meta + JSX + screenshots into `.design-to-code/state/<feature>/source-snapshot/`. The bridge reads from the snapshot for the rest of the run, not the live iter folder. |
+| **source-snapshot** | What Gate 1 writes when ingesting an iter: a frozen copy of source-meta + JSX + screenshots into `.canvas-to-code/state/<feature>/source-snapshot/`. The bridge reads from the snapshot for the rest of the run, not the live iter folder. |
 
 Canonical schema: [BOS paper-design SKILL.md § Source-meta v2](https://github.com/open-session/BOS-3.0/blob/feat/frontend-only-rewrite/.claude/skills/paper-design/SKILL.md#source-meta-v2-schema-the-bridge-contract).
 

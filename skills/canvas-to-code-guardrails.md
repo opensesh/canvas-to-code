@@ -5,7 +5,7 @@ description: Editor-time lint reminders for projects using Canvas-to-Code. Auto-
 
 # Canvas-to-Code Guardrails
 
-You are editing in a project that uses the Canvas-to-Code plugin. Apply these eight reminders **inline** as you write or edit code (rules 1–7) or design sources (rule 8). Severity is consumer-controlled via `.design-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
+You are editing in a project that uses the Canvas-to-Code plugin. Apply these eight reminders **inline** as you write or edit code (rules 1–7) or design sources (rule 8). Severity is consumer-controlled via `.canvas-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
 
 ## When to apply
 
@@ -149,7 +149,7 @@ The full v2 contract lives in the producer: [BOS paper-design SKILL.md § Source
 
 When you spot a violation, surface it like this in your edit explanation:
 
-> *Note: this introduces `border-2` (guardrail 2). Replacing with `border border-border-secondary`. If this is intentional, the consumer can override per-rule via `.design-to-code/config.yaml.guardrail_overrides`.*
+> *Note: this introduces `border-2` (guardrail 2). Replacing with `border border-border-secondary`. If this is intentional, the consumer can override per-rule via `.canvas-to-code/config.yaml.guardrail_overrides`.*
 
 Do not silently rewrite the user's intent — flag and correct. If the user pushes back, accept their choice and move on. For rule 8, propose a diff but never auto-edit source-meta.yaml — the producer skill owns that file's content.
 

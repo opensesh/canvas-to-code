@@ -6,7 +6,7 @@ owner: '{{owner_handle}}'
 created: '{{YYYY-MM-DD}}'
 related:
   - .claude-design/{{feature}}/review.html
-  - .design-to-code/state/{{feature}}/status.json
+  - .canvas-to-code/state/{{feature}}/status.json
 ---
 
 # Spike: {{feature_title}} · Design-to-Code Bridge run
@@ -40,7 +40,7 @@ related:
 
 ## 3. Recommendation (locked)
 
-**{{one-line headline}}.** Full plan at `.design-to-code/state/{{feature}}/plan.md`. {{n_slices}} PRs:
+**{{one-line headline}}.** Full plan at `.canvas-to-code/state/{{feature}}/plan.md`. {{n_slices}} PRs:
 
 | PR | Title | ~LOC | Verification |
 |---|---|---|---|

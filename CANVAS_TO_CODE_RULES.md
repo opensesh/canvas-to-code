@@ -1,6 +1,6 @@
 # Canvas-to-Code — Rules
 
-Portable rules that define subagent behavior for the Canvas-to-Code plugin. These rules apply to every spawn of a `design-to-code-*` agent, regardless of consumer project. Consumer-side overrides live in `.design-to-code/config.yaml`.
+Portable rules that define subagent behavior for the Canvas-to-Code plugin. These rules apply to every spawn of a `canvas-to-code-*` agent, regardless of consumer project. Consumer-side overrides live in `.canvas-to-code/config.yaml`.
 
 ---
 
@@ -47,7 +47,7 @@ Gates run in strict order. PM refuses to advance to gate N until gate N-1 has `r
 | 9 | Pre-swap | yes |
 | 10 | Pre-retro | configurable; default warn |
 
-Severity can be overridden per-consumer in `.design-to-code/config.yaml.gate_severities`.
+Severity can be overridden per-consumer in `.canvas-to-code/config.yaml.gate_severities`.
 
 ---
 
@@ -109,7 +109,7 @@ This keeps blast radius minimal and gives the engineer one place to flip from mo
 
 `canvas-to-code-pm` orchestrates and gates. **It never edits production code.** Its `Write` and `Edit` tools are scoped — by system prompt — to:
 
-- `.design-to-code/state/<feature>/status.json`
+- `.canvas-to-code/state/<feature>/status.json`
 - `.claude-design/<feature>/source-meta.yaml` (when Gate 0 needs to infer it)
 - `docs/spikes/design-system/**/*.md` (when retro asks it to)
 
@@ -125,9 +125,9 @@ If asked to write feature code, the PM declines and offers to spawn `canvas-to-c
 
 At spawn time, every agent reads:
 
-1. `.design-to-code/config.yaml` — gate severities, LOC budget, component dirs.
-2. `.design-to-code/token-map.yaml` — hex → token mappings.
-3. `.design-to-code/state/<feature>/status.json` — phase, gateLog, prior decisions.
+1. `.canvas-to-code/config.yaml` — gate severities, LOC budget, component dirs.
+2. `.canvas-to-code/token-map.yaml` — hex → token mappings.
+3. `.canvas-to-code/state/<feature>/status.json` — phase, gateLog, prior decisions.
 
 Agents that don't find these files emit a friendly error pointing at the `templates/config.example.yaml` setup path.
 
@@ -140,7 +140,7 @@ Users see what's happening — narration adds tokens without adding clarity. Mir
 
 ### 5. State-File Conventions
 
-`.design-to-code/state/<feature>/status.json` is the per-feature single source of truth. Every gate transition appends a `gateLog` entry:
+`.canvas-to-code/state/<feature>/status.json` is the per-feature single source of truth. Every gate transition appends a `gateLog` entry:
 
 ```json
 {
@@ -173,7 +173,7 @@ Three additional fields disambiguate iter-shape vs flat-shape ingestion:
 
 - `subpage` (string, nullable) — the URL's second path segment (e.g. `colors` for `/brand-hub/colors`), or `null` for feature-index pages and flat-shape features.
 - `sourceShape` (`"iter" | "flat"`, default `"flat"`) — whether the source is a v2 iter folder or a flat `review.html` + screenshots.
-- `sourceIterPath` (string, nullable) — absolute or repo-root-relative path of the iter folder when `sourceShape === "iter"`. The PM snapshots the iter into `.design-to-code/state/<feature>/source-snapshot/` at Gate 1 and reads from the snapshot for the rest of the run, so this field is for traceability rather than runtime use.
+- `sourceIterPath` (string, nullable) — absolute or repo-root-relative path of the iter folder when `sourceShape === "iter"`. The PM snapshots the iter into `.canvas-to-code/state/<feature>/source-snapshot/` at Gate 1 and reads from the snapshot for the rest of the run, so this field is for traceability rather than runtime use.
 
 **Backfill rule.** When the PM reads a pre-0.4.0 `status.json` that lacks any of these fields, it backfills them silently before its first write:
 
@@ -225,7 +225,7 @@ Before opening a slice PR, the engineer (or the post-merge hook) verifies:
 - Working tree clean.
 - Current branch matches `<feature>-pr-<n>-<slug>`.
 - Plan's slice spec up-to-date in `status.json`.
-- Consumer typecheck + lint + build pass (commands configurable in `.design-to-code/config.yaml`).
+- Consumer typecheck + lint + build pass (commands configurable in `.canvas-to-code/config.yaml`).
 
 ---
 
@@ -261,7 +261,7 @@ Severity is consumer-controlled (`config.yaml.guardrail_severity` ∈ `warn | er
 ## Security
 
 - Never commit secrets — design exports occasionally embed API keys in embedded JSON. Extractor strips them when detected.
-- Never write to consumer paths outside `.design-to-code/`, `.claude-design/`, `docs/spikes/` without explicit user action.
+- Never write to consumer paths outside `.canvas-to-code/`, `.claude-design/`, `docs/spikes/` without explicit user action.
 - Hooks are opt-in; consumer opts in via `.claude/settings.json`.
 
 ---
@@ -278,4 +278,4 @@ No autonomous escalation — this is a hands-on tool.
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge) · License: MIT · Origin: [Open Session](https://opensession.co)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code) · License: MIT · Origin: [Open Session](https://opensession.co)*

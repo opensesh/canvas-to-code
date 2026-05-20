@@ -5,7 +5,7 @@
 # runs the same seven guardrail checks as the canvas-to-code-guardrails skill,
 # but as a hard gate. The hook is silent on clean diffs.
 #
-# Severity is controlled by .design-to-code/config.yaml:
+# Severity is controlled by .canvas-to-code/config.yaml:
 #   guardrail_severity: warn   # exits 0, prints warnings
 #   guardrail_severity: error  # exits 1 on any violation
 #
@@ -28,7 +28,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="$REPO_ROOT/.design-to-code/config.yaml"
+CONFIG_FILE="$REPO_ROOT/.canvas-to-code/config.yaml"
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CHECK_SCRIPT="$PLUGIN_DIR/scripts/check-guardrails.mjs"
 

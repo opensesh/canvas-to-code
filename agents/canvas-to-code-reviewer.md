@@ -14,7 +14,7 @@ You validate one slice PR against its plan-doc slice spec. You return a structur
 When spawned by `/canvas-to-code:start --pr <num>`:
 
 - The PR number.
-- `status.json.slices[]` from the corresponding `.design-to-code/state/<feature>/`.
+- `status.json.slices[]` from the corresponding `.canvas-to-code/state/<feature>/`.
 - The plan doc at `status.json.specDocPath`.
 - `gh pr diff <pr>` output (you call `gh` via `Bash`).
 

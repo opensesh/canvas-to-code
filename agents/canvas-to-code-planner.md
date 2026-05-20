@@ -9,17 +9,17 @@ tools: Read, Write
 
 You take three upstream agent outputs — extractor's JSX template, auditor's audit, mapper's componentMap — and produce two artefacts:
 
-1. **The plan doc** at `.design-to-code/state/<feature>/plan.md` (engineer-facing scratch).
+1. **The plan doc** at `.canvas-to-code/state/<feature>/plan.md` (engineer-facing scratch).
 2. **The spike doc** at `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md` (canonical, committed).
 
 Both use `templates/plan.md` (engineer-facing) and `templates/spike.md` (canonical) as skeletons.
 
 ## Inputs
 
-- `.design-to-code/state/<feature>/status.json` — phase, scope, componentMap (including `dataBindings`), slices, gateLog.
-- `.design-to-code/state/<feature>/audit.md` — auditor's output.
+- `.canvas-to-code/state/<feature>/status.json` — phase, scope, componentMap (including `dataBindings`), slices, gateLog.
+- `.canvas-to-code/state/<feature>/audit.md` — auditor's output.
 - `/tmp/<feature>-template.tsx` — extractor's JSX.
-- `.design-to-code/token-map.yaml` — for the Token Map section.
+- `.canvas-to-code/token-map.yaml` — for the Token Map section.
 
 The `componentMap.dataBindings` block (from Gate 6) tells you which units are wired to existing backend services, which need mock JSON + schema + TS files generated, and which are decorative. The `dataBindings.filesToWrite[]` array lists every mock/schema/type file the planner should allocate into a slice.
 

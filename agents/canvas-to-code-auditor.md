@@ -13,11 +13,11 @@ You audit the consumer's codebase for the target surface. Read-only — you neve
 
 - `targetRoute` from `status.json` (e.g. `/brand-hub`).
 - `isExistingRoute` boolean.
-- Consumer config (`.design-to-code/config.yaml`) for `components_dirs`.
+- Consumer config (`.canvas-to-code/config.yaml`) for `components_dirs`.
 
 ## Output
 
-Structured markdown at `.design-to-code/state/<feature>/audit.md`. Format:
+Structured markdown at `.canvas-to-code/state/<feature>/audit.md`. Format:
 
 ```markdown
 # Audit: /brand-hub

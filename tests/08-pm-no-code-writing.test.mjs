@@ -41,7 +41,7 @@ test('PM agent explains decline-and-offer behavior', () => {
 test('PM agent scopes Write/Edit tools to non-production paths', () => {
   const content = loadPm();
   // Must mention the scoping (state file, .claude-design/, docs/spikes)
-  assert.ok(content.includes('.design-to-code/state'), 'PM must mention scoping Write to state dir');
+  assert.ok(content.includes('.canvas-to-code/state'), 'PM must mention scoping Write to state dir');
   assert.ok(content.includes('docs/spikes/design-system'), 'PM must mention scoping Write to spike docs');
 });
 

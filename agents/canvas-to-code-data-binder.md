@@ -17,8 +17,8 @@ The JSON Schema you emit is the **durable contract** between designer and develo
 
 Spawned by the PM during Gate 6 with:
 
-- **componentMap** at `.design-to-code/state/<feature>/status.json` (`componentMap.units[]` from the mapper).
-- **Consumer config** at `.design-to-code/config.yaml` (`components_dirs.*`, plus optional `data_binding.*` overrides).
+- **componentMap** at `.canvas-to-code/state/<feature>/status.json` (`componentMap.units[]` from the mapper).
+- **Consumer config** at `.canvas-to-code/config.yaml` (`components_dirs.*`, plus optional `data_binding.*` overrides).
 - **Consumer's `lib/services/`** — Glob + Read to detect existing backend services.
 - **Consumer's `hooks/`** — Glob + Grep for `useQuery(` / `useMutation(` patterns.
 - **Consumer's `app/`** (or whichever route root the consumer declares) — Glob to resolve page/subpage hierarchy.
@@ -26,7 +26,7 @@ Spawned by the PM during Gate 6 with:
 
 ## Output
 
-A single JSON object matching the `dataBindings` shape. Return it to the PM (which merges it into `.design-to-code/state/<feature>/status.json.componentMap.dataBindings` and writes the proposed files).
+A single JSON object matching the `dataBindings` shape. Return it to the PM (which merges it into `.canvas-to-code/state/<feature>/status.json.componentMap.dataBindings` and writes the proposed files).
 
 ```json
 {

@@ -1,8 +1,6 @@
 ---
 name: canvas-to-code-source-shapes
-description: |
-  Reference for the two source shapes Canvas-to-Code accepts — flat (review.html + screenshots) and iter (producer-emitted folder with source-meta v2).
-  Auto-activates when the user mentions "iter source", "flat source", "review.html", "iter folder", "source shape", "supported producers", "metaVersion", "source-meta", "producer skill", or runs /canvas-to-code:start.
+description: Reference for the two source shapes Canvas-to-Code accepts — flat (review.html + screenshots) and iter (producer-emitted folder with source-meta v2). Auto-activates when the user mentions "iter source", "flat source", "review.html", "iter folder", "source shape", "supported producers", "metaVersion", "source-meta", "producer skill", or runs /canvas-to-code:start.
 ---
 
 # Canvas-to-Code Source Shapes
@@ -44,7 +42,7 @@ A subfolder ending in `iter-NN-<slug>` with a v2-compliant `source-meta.yaml`. E
 
 When the Gate 0 picker selects an iter:
 
-1. **Gate 1** snapshots `source-meta.yaml` + `jsxPath` + `primaryScreenshot` + all sibling screenshots into `.design-to-code/state/<feature>/source-snapshot/`. The bridge reads from the snapshot for the rest of the run, so the iter folder can evolve freely afterward.
+1. **Gate 1** snapshots `source-meta.yaml` + `jsxPath` + `primaryScreenshot` + all sibling screenshots into `.canvas-to-code/state/<feature>/source-snapshot/`. The bridge reads from the snapshot for the rest of the run, so the iter folder can evolve freely afterward.
 2. **Gate 5a** short-circuits the HTML extractor and copies the snapshot JSX straight to `/tmp/<feature>-template.tsx`. The lossiest gate in the pipeline becomes a no-op.
 
 The iter IS the handoff — no manual "promote to review.html" step.
@@ -96,7 +94,7 @@ New producer skills can ship iter shape too — the bridge is producer-agnostic.
 - `source-meta.yaml` has `metaVersion: 2` and all seven required fields
 - `jsxPath` resolves to a non-empty file inside the iter folder
 - `primaryScreenshot` resolves to a non-empty file inside the iter folder
-- Snapshot copied to `.design-to-code/state/<feature>/source-snapshot/`
+- Snapshot copied to `.canvas-to-code/state/<feature>/source-snapshot/`
 
 Failures print a structured message pointing at the producer skill for backfill.
 

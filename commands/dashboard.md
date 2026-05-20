@@ -6,11 +6,11 @@ argument-hint: "[--feature <name>] [--json]"
 
 # /canvas-to-code:dashboard — Work timeline
 
-Single-pane view of every feature ever bridged. Reads `.design-to-code/state/*/status.json` plus `git log` and `gh pr view` for PR status. No agents — pure aggregation.
+Single-pane view of every feature ever bridged. Reads `.canvas-to-code/state/*/status.json` plus `git log` and `gh pr view` for PR status. No agents — pure aggregation.
 
 ## What it shows
 
-**Cross-feature** (no args) — every feature in `.design-to-code/state/`, one row each:
+**Cross-feature** (no args) — every feature in `.canvas-to-code/state/`, one row each:
 
 - Feature slug + phase + current gate
 - Started · last touched · completed (—  if still in flight)
@@ -54,7 +54,7 @@ Source: claude-design  (shape: flat)
 Started: 2026-06-04T09:14:08Z
 Last touched: 2026-06-12T16:30:51Z
 Spike: docs/spikes/design-system/2026-06/2026-06-04-spaces-redesign-bridge.md
-Plan:  .design-to-code/state/spaces-redesign/plan.md
+Plan:  .canvas-to-code/state/spaces-redesign/plan.md
 
 Gates:
   ✓ 0  Intake                  2026-06-04T09:14:08Z
@@ -95,7 +95,7 @@ Icon gaps: slack, asterisk-4-point
 
 ## Failure modes
 
-- No `.design-to-code/state/` directory → prints the empty-state hint pointing at `/canvas-to-code:start`.
+- No `.canvas-to-code/state/` directory → prints the empty-state hint pointing at `/canvas-to-code:start`.
 - A `status.json` is malformed → that feature row marked `ERROR`; render continues for the rest.
 - `--feature <name>` not found → lists features that do exist.
 

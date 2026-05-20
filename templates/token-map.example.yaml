@@ -1,6 +1,6 @@
 # Design-to-Code Bridge — token map
 #
-# Copy this file to `.design-to-code/token-map.yaml` at the root of your project
+# Copy this file to `.canvas-to-code/token-map.yaml` at the root of your project
 # and seed from your design system's tokens (brand.css, tokens.css, theme.ts).
 #
 # The mapper uses this file to translate raw hex / off-brand fonts / off-spec
