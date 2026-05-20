@@ -13,14 +13,16 @@ Read-only walk of `.claude-design/` (and, for state-tracked features, the matchi
 **All features** (no args) — one block per feature subfolder under `.claude-design/`:
 
 - Feature name + path
+- Source shape: `iter` (with subpage + iter path) or `flat`. Read from `status.json.sourceShape`.
 - Counts by extension: `*.html`, `*.png`, `*.yaml`, `*.md`, `*.tsx`, `*.json`, _other_
 - Total size on disk
 - Whether each standard artifact is present:
-  - `review.html`
+  - `review.html` (flat) **or** iter folder path with `source-meta.yaml` v2 (iter)
   - `screenshots/` (count of PNGs)
-  - `source-meta.yaml`
+  - `source-meta.yaml` (flat root) or `<iter>/source-meta.yaml` (iter)
   - `notes.md`
   - `.design-to-code/state/<feature>/status.json` (yes/no)
+  - `.design-to-code/state/<feature>/source-snapshot/` (iter-shape features only — verifies the Gate 1 snapshot landed)
   - `.design-to-code/state/<feature>/plan.md` (yes/no)
   - `.design-to-code/state/<feature>/audit.md` (yes/no)
   - Plan doc at `docs/spikes/design-system/<YYYY-MM>/<YYYY-MM-DD>-<feature>-bridge.md` (yes/no, with path)
@@ -62,7 +64,18 @@ spaces-redesign
   ├─ audit.md                  ✓     2.8 KB
   ├─ spike                     ✓     docs/spikes/design-system/2026-06/2026-06-04-spaces-redesign-bridge.md
   └─ template.tsx              ✓     /tmp/spaces-redesign-template.tsx  (78 KB, ephemeral)
+  Source: flat
   Counts:  .html 1 · .png 5 · .yaml 1 · .md 3 · .json 1 · .tsx 1
+
+brain (iter source)
+  .claude-design/brain/home/paper/iter-01-baseline/  860 KB
+  ├─ source-meta.yaml          ✓     420 B   (metaVersion: 2, source: paper)
+  ├─ notes.md                  ✓     1.2 KB
+  ├─ jsx/brain-home.tsx        ✓     14.8 KB
+  └─ screenshots/              ✓     844 KB  (1 PNG)
+  Snapshot:                   ✓     .design-to-code/state/brain/source-snapshot/  (mirrors the iter at Gate 1)
+  Source: iter · subpage: home · iter path: .claude-design/brain/home/paper/iter-01-baseline/
+  Counts:  .yaml 1 · .md 1 · .tsx 1 · .png 1
 
 account-shell
   .claude-design/account-shell/                     1.2 MB

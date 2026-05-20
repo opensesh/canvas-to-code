@@ -23,6 +23,7 @@ Single-pane view of every feature ever bridged. Reads `.design-to-code/state/*/s
 **Single feature** (`--feature <name>`) — adds:
 
 - Full gateLog with ISO timestamps (every Gate 0–10 entry, pass / warn / fail)
+- Source shape: `iter` (with `subpage` + iter path) or `flat`
 - Per-slice detail: title, branch, files, started_at, merged_at, PR number, LOC
 - Component map aggregate by tier (base / ds / custom-shared / custom-page / net-new)
 - Guardrail violation totals
@@ -49,7 +50,7 @@ Last activity: 2026-05-19 17:42
 spaces-redesign — Phase: slice (3 / 6)
 ======================================
 Target: /spaces  (existing)
-Source: claude-design
+Source: claude-design  (shape: flat)
 Started: 2026-06-04T09:14:08Z
 Last touched: 2026-06-12T16:30:51Z
 Spike: docs/spikes/design-system/2026-06/2026-06-04-spaces-redesign-bridge.md

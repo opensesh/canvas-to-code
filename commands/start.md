@@ -20,26 +20,50 @@ One command, all eleven gates. Spawns `@canvas-to-code-pm.md`, which inspects `.
 
 ## Guided discovery (default path)
 
-When called with no flags, the PM agent walks the user through a discovery scan before doing anything:
+When called with no flags, the PM agent presents one unified menu so the user picks where the source comes from. PM never silently advances past Gate 0.
 
-1. **Scan `.claude-design/`** in the consumer repo.
-2. **Categorize** what it finds:
+1. **Scan `.claude-design/`** (depth ≤ 5). Categorize:
    - **Active features** — subfolder has `status.json` with `phase ≠ "done"`.
+   - **Iter folders (v2)** — `iter-*` directories with `source-meta.yaml` containing `metaVersion: 2`. The producer (e.g. the `paper-design` skill) emits these; the bridge auto-fills feature, subpage, route, and source from the iter's `source-meta.yaml`.
+   - **Loose materials** — subfolder with `review.html`, `screenshots/`, or `source-meta.yaml` but no `status.json` and not an iter folder.
    - **Completed features** — `status.json` with `phase = "done"`.
-   - **Loose materials** — subfolder has `review.html`, `screenshots/`, or `source-meta.yaml` but no `status.json` yet.
-   - **Empty** — no `.claude-design/` directory at all.
-3. **Present a guided menu** based on what's there:
-   - One or more active features → *"Resume `<feature>` (Gate N), or start fresh?"*
-   - Loose materials only → *"I see materials at `.claude-design/<subfolder>/`. Import them into a new feature, or start fresh with new materials?"*
-   - Empty → *"No existing assets. Let's gather materials."* (Today's Gate 0 intake.)
-4. **Route** based on the user's choice. PM never silently auto-advances past Gate 0 without showing the discovery summary.
+
+2. **Print one menu**:
+
+   ```
+   Welcome to canvas-to-code. Scanning .claude-design/…
+
+   Found:
+     Active features
+       1. <feature>  (Gate N in progress, last touched <when>)
+     Iter folders (v2)
+       2. <feature>/<subpage>  <iter-name>  (<source>, <when>)
+     Loose materials
+       3. <subfolder>/  (review.html, no status.json)
+     Completed
+       4. <feature>  (done, <date>)
+
+     5. Import from external source (Claude Design, Figma, V0, Lovable, Webflow)
+     6. Start blank — I'll walk you through capturing materials
+
+   Reply with a number, or paste a path to an iter folder.
+   ```
+
+3. **Route**:
+   - **Active feature** → resume at the next pending gate.
+   - **Iter folder** (selected by number or pasted as a path) → Gate 0 with `source-meta` auto-fill; `status.json` gets `sourceShape: "iter"` + `sourceIterPath` + `subpage`. Gate 5a will short-circuit the HTML extractor and use the iter's pre-extracted JSX.
+   - **Loose materials** → Gate 0 intake using the subfolder name as default slug; `sourceShape: "flat"`.
+   - **Import from external** → today's conversational Gate 0 (HTML + screenshot paths, then pick the source tool).
+   - **Start blank** → Gate 0 from scratch.
+
+If `.claude-design/` is empty or absent, the menu collapses to options 5 + 6 only.
 
 ## What the gates do
 
 | Gate | Name | Driver |
 |---|---|---|
 | 0 | Intake | PM conversation (feature, route, materials, source tool) |
-| 1 | Materials check | PM (verifies `review.html` + ≥1 screenshot) |
+| 1 | Materials check | PM (verifies `review.html` + ≥1 screenshot for flat shape; snapshots `source-meta.yaml` + JSX + screenshots into `.design-to-code/state/<feature>/source-snapshot/` for iter shape) |
 | 2 | DS alignment | PM (verifies `source-meta.yaml`, tokens, lint heuristics) |
 | 3 | Target surface audit | `@canvas-to-code-auditor.md` |
 | 4 | Scope confirmation | PM conversation |
