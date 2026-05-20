@@ -8,7 +8,7 @@
 
 ```
 ┌──────────────────────┐     ┌──────────────────────────────┐     ┌─────────────────────────┐
-│   Design source      │     │   Canvas-to-Code             │     │   BOS codebase          │
+│   Design             │     │   Conversion                 │     │   Codebase              │
 │   ─────────────      │     │   ───────────────            │     │   ─────────────         │
 │   Paper (preferred)  │     │   0. Intake                  │     │   app/<route>/          │
 │   Claude Design      │     │   1. Materials               │     │   ├─ DS-aligned JSX     │
