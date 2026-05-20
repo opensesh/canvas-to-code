@@ -75,11 +75,29 @@ Inside any Claude Code project:
 
 ```
 /plugin marketplace add opensesh/design-to-code-bridge
-/plugin install design-to-code-bridge@opensesh-design-to-code-bridge
+/plugin install design-to-code-bridge@design-to-code-bridge-marketplace
 /design-to-code:start
 ```
 
 That's it — the PM agent takes you through Gate 0 and writes everything else.
+
+## Updating
+
+To pull the latest version after a release:
+
+```
+/plugin marketplace update design-to-code-bridge-marketplace
+/plugin update design-to-code-bridge
+```
+
+If your Claude Code build doesn't ship `/plugin update`, fall back to:
+
+```
+/plugin uninstall design-to-code-bridge
+/plugin install design-to-code-bridge@design-to-code-bridge-marketplace
+```
+
+Both paths reliably pick up new versions because every release bumps `.claude-plugin/plugin.json`'s `version` field (enforced by [`version-check.yml`](./.github/workflows/version-check.yml) on every PR).
 
 ---
 
