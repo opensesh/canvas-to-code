@@ -12,22 +12,31 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 test('plugin.json parses and has required fields', () => {
   const manifest = JSON.parse(readFileSync(join(ROOT, '.claude-plugin/plugin.json'), 'utf8'));
-  assert.equal(manifest.name, 'design-to-code-bridge');
+  assert.equal(manifest.name, 'canvas-to-code');
   assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
   assert.ok(manifest.description?.length > 20, 'description is meaningful');
   assert.ok(manifest.author?.name, 'has author.name');
-  assert.match(manifest.repository, /github\.com\/opensesh\/design-to-code-bridge/);
+  assert.match(manifest.repository, /github\.com\/opensesh\/canvas-to-code/);
 });
 
-test('commands/design-to-code/ exists with 10 files', () => {
-  const cmdDir = join(ROOT, 'commands/design-to-code');
+test('marketplace.json parses and points at the renamed repo', () => {
+  const m = JSON.parse(readFileSync(join(ROOT, '.claude-plugin/marketplace.json'), 'utf8'));
+  assert.equal(m.name, 'canvas-to-code-marketplace');
+  assert.equal(m.plugins[0].name, 'canvas-to-code');
+  assert.equal(m.plugins[0].source.repo, 'opensesh/canvas-to-code');
+});
+
+test('commands/ exists with 3 files (flattened from commands/design-to-code/)', () => {
+  const cmdDir = join(ROOT, 'commands');
   assert.ok(existsSync(cmdDir), 'commands dir exists');
   const files = readdirSync(cmdDir).filter((f) => f.endsWith('.md'));
-  assert.equal(files.length, 10, `expected 10 commands, got ${files.length}: ${files.join(', ')}`);
-  const expected = ['start', 'prep', 'plan', 'validate', 'slice', 'swap', 'retro', 'dashboard', 'status', 'review'];
+  assert.equal(files.length, 3, `expected 3 commands, got ${files.length}: ${files.join(', ')}`);
+  const expected = ['start', 'dashboard', 'assets'];
   for (const name of expected) {
     assert.ok(files.includes(`${name}.md`), `missing command: ${name}.md`);
   }
+  // The old subdirectory must be gone — its presence creates a doubled namespace.
+  assert.ok(!existsSync(join(cmdDir, 'design-to-code')), 'old commands/design-to-code/ subdirectory must be removed');
 });
 
 test('agents/ exists with 7 subagents', () => {

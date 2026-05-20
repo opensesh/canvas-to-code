@@ -21,7 +21,7 @@ function loadStatuses() {
 
 test('header is present', () => {
   const md = renderDashboard(loadStatuses());
-  assert.match(md, /Design-to-Code Bridge — Dashboard/);
+  assert.match(md, /Canvas-to-Code — Dashboard/);
 });
 
 test('cumulative block lists features bridged: 2', () => {

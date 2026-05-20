@@ -24,7 +24,7 @@ function parseFrontmatter(filePath) {
 }
 
 test('every command has description + allowed-tools', () => {
-  const dir = join(ROOT, 'commands/design-to-code');
+  const dir = join(ROOT, 'commands');
   const files = readdirSync(dir).filter((f) => f.endsWith('.md'));
   for (const f of files) {
     const fm = parseFrontmatter(join(dir, f));
