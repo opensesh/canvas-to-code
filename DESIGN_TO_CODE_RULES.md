@@ -1,6 +1,6 @@
-# Design-to-Code Bridge — Rules
+# Canvas-to-Code — Rules
 
-Portable rules that define subagent behavior for the Design-to-Code Bridge plugin. These rules apply to every spawn of a `design-to-code-*` agent, regardless of consumer project. Consumer-side overrides live in `.design-to-code/config.yaml`.
+Portable rules that define subagent behavior for the Canvas-to-Code plugin. These rules apply to every spawn of a `design-to-code-*` agent, regardless of consumer project. Consumer-side overrides live in `.design-to-code/config.yaml`.
 
 ---
 
@@ -14,16 +14,16 @@ The bridge takes HTML + screenshot and produces DS-aligned code. Both inputs are
 
 ## Command Context
 
-Agents are spawned by these primary commands:
+Three slash commands. The PM agent is fronted by `/canvas-to-code:start`, which dispatches by flag.
 
-- `/design-to-code:start` — Spawns `design-to-code-pm` for Gate 0 intake.
-- `/design-to-code:plan <feature>` — Spawns `-auditor`, `-extractor`, `-mapper`, `-data-binder`, `-planner` (Gates 3–7).
-- `/design-to-code:validate <feature>` — Re-runs `-mapper` standalone (Gate 5).
-- `/design-to-code:slice <n>` — PM runs Gate 8 preflight.
-- `/design-to-code:swap` — PM runs Gate 9 preflight.
-- `/design-to-code:retro` — PM runs Gate 10 then a conversational retro.
-- `/design-to-code:dashboard` — No agent; reads `state/*/status.json` + git + GitHub.
-- `/design-to-code:review <pr>` — Spawns `-reviewer`.
+- `/canvas-to-code:start` — Spawns `design-to-code-pm`. Flags route to specific modes:
+  - _(no flags)_ → guided discovery scan of `.claude-design/`, then either resume an active feature or run Gate 0 intake.
+  - `--feature <name>` → resume that feature; PM picks up at its next pending gate (auto-advances 0 → 10).
+  - `--prep <feature>` → scaffold-only path (no conversational intake).
+  - `--gate <n>` → jump to / re-run gate `n`. `--gate 5` re-runs the keystone component mapping (the old `validate` shortcut). `--gate 8/9/10` runs slice / swap / retro preflight respectively.
+  - `--pr <num>` → spawn `design-to-code-reviewer` against that slice PR; returns PASS/REVISE.
+- `/canvas-to-code:dashboard [--feature <name>] [--json]` — No agent; reads `state/*/status.json` + git + GitHub. Surfaces what's done, what's in progress, when it happened, PR/doc links.
+- `/canvas-to-code:assets [--feature <name>] [--json]` — No agent; reads `.claude-design/`. Surfaces file counts by type, paths, and which standard artifacts are present.
 
 Worker agents are never spawned directly; the PM orchestrates.
 
@@ -153,9 +153,25 @@ Users see what's happening — narration adds tokens without adding clarity. Mir
 
 `result` ∈ `pass | warn | fail | pending`. The PM treats `warn` as advancing (records the warning); `fail` blocks.
 
+#### Required top-level timestamp fields (v0.3.0+)
+
+Every `status.json` carries three lifecycle timestamps in addition to `gateLog`:
+
+- `created_at` (ISO) — written at Gate 0 pass.
+- `last_touched_at` (ISO) — rewritten on every PM write. Fuels the dashboard's "last activity" column.
+- `completed_at` (ISO, nullable) — written at Gate 10 pass; null until then.
+
+Per-slice timestamps inside `slices[]`:
+
+- `slices[i].started_at` (ISO) — written when Gate 8 passes for slice `i`.
+- `slices[i].merged_at` (ISO, nullable) — written when the slice PR merges.
+- `slices[i].pr_number` (integer, nullable) — populated from `gh pr view` when the PR is opened.
+
+**Backfill rule.** When the PM reads a pre-0.3.0 `status.json` that lacks any of these fields, it backfills them silently from `gateLog` (e.g. `created_at = gateLog[0].atISO`) before its first write. No standalone migration script. The dashboard renders `—` for any value that is still absent (e.g. an in-flight feature has no `completed_at` yet).
+
 ### 6. Idempotency
 
-Re-running `/design-to-code:start` mid-flow MUST resume from the last-completed gate. Read `status.json`, summarise progress, ask what to do next. Don't restart Gate 0 unless explicitly requested.
+Re-running `/canvas-to-code:start` mid-flow MUST resume from the last-completed gate. With no flags, run the guided-discovery scan first and present a menu; with `--feature <name>`, jump straight into resume. Don't restart Gate 0 unless explicitly requested.
 
 ### 7. Source-Type Discriminator
 
