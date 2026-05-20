@@ -25,4 +25,4 @@
 
 ---
 
-Part of the {{feature}} redesign via [Design-to-Code Bridge](https://github.com/opensesh/design-to-code-bridge). Plan: `.design-to-code/state/{{feature}}/plan.md` · Spike: `docs/spikes/design-system/{{YYYY-MM}}/{{YYYY-MM-DD}}-{{feature}}-bridge.md`.
+Part of the {{feature}} redesign via [canvas-to-code](https://github.com/opensesh/canvas-to-code). Plan: `.design-to-code/state/{{feature}}/plan.md` · Spike: `docs/spikes/design-system/{{YYYY-MM}}/{{YYYY-MM-DD}}-{{feature}}-bridge.md`.

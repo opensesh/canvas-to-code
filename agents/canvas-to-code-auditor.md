@@ -1,5 +1,5 @@
 ---
-name: design-to-code-auditor
+name: canvas-to-code-auditor
 description: Read-only codebase audit for the target surface declared in Gate 0. Returns route status, components/hooks/lib used, sub-routes, and behaviors to port.
 model: sonnet
 tools: Read, Grep, Glob
@@ -129,4 +129,4 @@ The PM uses this to ask the engineer for confirmation.
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

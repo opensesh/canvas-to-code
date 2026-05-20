@@ -2,7 +2,7 @@
 # pre-commit-guardrails.sh — opt-in pre-commit hook for Canvas-to-Code.
 #
 # When enabled in .claude/settings.json (or .git/hooks/pre-commit), this hook
-# runs the same seven guardrail checks as the design-to-code-guardrails skill,
+# runs the same seven guardrail checks as the canvas-to-code-guardrails skill,
 # but as a hard gate. The hook is silent on clean diffs.
 #
 # Severity is controlled by .design-to-code/config.yaml:

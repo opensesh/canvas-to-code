@@ -16,12 +16,12 @@ The bridge takes HTML + screenshot and produces DS-aligned code. Both inputs are
 
 Three slash commands. The PM agent is fronted by `/canvas-to-code:start`, which dispatches by flag.
 
-- `/canvas-to-code:start` — Spawns `design-to-code-pm`. Flags route to specific modes:
+- `/canvas-to-code:start` — Spawns `canvas-to-code-pm`. Flags route to specific modes:
   - _(no flags)_ → guided discovery scan of `.claude-design/`, then either resume an active feature or run Gate 0 intake.
   - `--feature <name>` → resume that feature; PM picks up at its next pending gate (auto-advances 0 → 10).
   - `--prep <feature>` → scaffold-only path (no conversational intake).
   - `--gate <n>` → jump to / re-run gate `n`. `--gate 5` re-runs the keystone component mapping (the old `validate` shortcut). `--gate 8/9/10` runs slice / swap / retro preflight respectively.
-  - `--pr <num>` → spawn `design-to-code-reviewer` against that slice PR; returns PASS/REVISE.
+  - `--pr <num>` → spawn `canvas-to-code-reviewer` against that slice PR; returns PASS/REVISE.
 - `/canvas-to-code:dashboard [--feature <name>] [--json]` — No agent; reads `state/*/status.json` + git + GitHub. Surfaces what's done, what's in progress, when it happened, PR/doc links.
 - `/canvas-to-code:assets [--feature <name>] [--json]` — No agent; reads `.claude-design/`. Surfaces file counts by type, paths, and which standard artifacts are present.
 
@@ -53,7 +53,7 @@ Severity can be overridden per-consumer in `.design-to-code/config.yaml.gate_sev
 
 ## Data Contracts (Gate 6)
 
-`design-to-code-data-binder` (Gate 6) classifies every unit's data source as `backend`, `mock`, or `none`. For each `mock` unit it proposes a triple of files; the PM writes them, the planner allocates them to the slice that consumes them.
+`canvas-to-code-data-binder` (Gate 6) classifies every unit's data source as `backend`, `mock`, or `none`. For each `mock` unit it proposes a triple of files; the PM writes them, the planner allocates them to the slice that consumes them.
 
 ### Hierarchical convention
 
@@ -107,17 +107,17 @@ This keeps blast radius minimal and gives the engineer one place to flip from mo
 
 ### 1. PM Never Writes Feature Code
 
-`design-to-code-pm` orchestrates and gates. **It never edits production code.** Its `Write` and `Edit` tools are scoped — by system prompt — to:
+`canvas-to-code-pm` orchestrates and gates. **It never edits production code.** Its `Write` and `Edit` tools are scoped — by system prompt — to:
 
 - `.design-to-code/state/<feature>/status.json`
 - `.claude-design/<feature>/source-meta.yaml` (when Gate 0 needs to infer it)
 - `docs/spikes/design-system/**/*.md` (when retro asks it to)
 
-If asked to write feature code, the PM declines and offers to spawn `design-to-code-planner` (which writes the plan) or to hand off to the engineer.
+If asked to write feature code, the PM declines and offers to spawn `canvas-to-code-planner` (which writes the plan) or to hand off to the engineer.
 
 ### 2. The Mapper Verifies Reuse Claims
 
-`design-to-code-mapper` is the keystone agent. The dashboard's component +/− diff depends on the `newOrReused` flag in `componentMap.units[]`. False positives ("reused" but the file doesn't exist yet) destroy the dashboard's signal.
+`canvas-to-code-mapper` is the keystone agent. The dashboard's component +/− diff depends on the `newOrReused` flag in `componentMap.units[]`. False positives ("reused" but the file doesn't exist yet) destroy the dashboard's signal.
 
 **The mapper MUST `ls` (or Glob) the target path before marking a unit `reused`.** If the path doesn't exist, the unit is `new`.
 
@@ -227,7 +227,7 @@ Either missing → Gate 1 fails. Screenshot-only is a special case (no `review.h
 
 ## Guardrails (Skill-level reminders)
 
-These are surfaced by the `design-to-code-guardrails` skill while editing files in `app/`, `components/`, or `lib/`. The pre-commit hook can enforce them as a hard gate.
+These are surfaced by the `canvas-to-code-guardrails` skill while editing files in `app/`, `components/`, or `lib/`. The pre-commit hook can enforce them as a hard gate.
 
 1. `devProps` naming must match the function name exactly.
 2. No `border-2` or thicker borders for containers.

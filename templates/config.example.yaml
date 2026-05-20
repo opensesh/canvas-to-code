@@ -25,7 +25,7 @@ gate_severities:
   8: error  # pre-swap
   9: warn   # pre-retro — non-blocking by default
 
-# Severity for guardrail violations surfaced by the design-to-code-guardrails skill
+# Severity for guardrail violations surfaced by the canvas-to-code-guardrails skill
 # and the pre-commit-guardrails.sh hook.
 guardrail_severity: warn  # warn | error
 

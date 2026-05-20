@@ -1,5 +1,5 @@
 ---
-name: design-to-code-reviewer
+name: canvas-to-code-reviewer
 description: Validates a single slice PR diff against the plan's slice spec. Returns PASS/REVISE with citations. Read-only — never pushes fixes.
 model: sonnet
 tools: Read, Grep, Bash
@@ -81,4 +81,4 @@ If `config.yaml.guardrail_severity: error`, escalate all `⚠` to `✗`.
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

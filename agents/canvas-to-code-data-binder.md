@@ -1,5 +1,5 @@
 ---
-name: design-to-code-data-binder
+name: canvas-to-code-data-binder
 description: Classifies each visual unit's data source. Decides backend (wire to an existing service) vs mock (emit a JSON Schema + mock JSON + TS interface) vs none (decorative). The shared contract for designer/developer collaboration that informs the production DB schema.
 model: opus
 tools: Read, Grep, Glob
@@ -163,4 +163,4 @@ Terse. Honest. No padding. The output is structured JSON, not prose. If a decisi
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

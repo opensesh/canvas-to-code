@@ -1,5 +1,5 @@
 ---
-name: design-to-code-guardrails
+name: canvas-to-code-guardrails
 description: Editor-time lint reminders for projects using Canvas-to-Code. Auto-activates when the repo contains `.claude-design/` and the user is editing files under `app/`, `components/`, `lib/`, or `hooks/`.
 ---
 
@@ -119,4 +119,4 @@ Do not silently rewrite the user's intent — flag and correct. If the user push
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

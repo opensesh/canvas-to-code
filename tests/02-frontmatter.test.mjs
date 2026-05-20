@@ -40,7 +40,7 @@ test('every agent has name + description + model + tools', () => {
   for (const f of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
     const fm = parseFrontmatter(join(dir, f));
     assert.ok(fm, `${f}: no frontmatter`);
-    assert.ok(fm.name?.startsWith('design-to-code-'), `${f}: name missing or wrong prefix`);
+    assert.ok(fm.name?.startsWith('canvas-to-code-'), `${f}: name missing or wrong prefix`);
     assert.ok(fm.description?.length > 10, `${f}: description missing`);
     assert.ok(validModels.includes(fm.model), `${f}: model ${fm.model} not in ${validModels.join(',')}`);
     assert.ok(fm.tools?.length > 0, `${f}: tools missing`);
@@ -52,19 +52,19 @@ test('every skill has name + description', () => {
   for (const f of readdirSync(dir).filter((x) => x.endsWith('.md'))) {
     const fm = parseFrontmatter(join(dir, f));
     assert.ok(fm, `${f}: no frontmatter`);
-    assert.ok(fm.name?.startsWith('design-to-code-'), `${f}: name missing or wrong prefix`);
+    assert.ok(fm.name?.startsWith('canvas-to-code-'), `${f}: name missing or wrong prefix`);
     assert.ok(fm.description?.length > 20, `${f}: description missing or too short`);
   }
 });
 
 test('PM agent uses opus, mapper/planner/extractor use opus, auditor/reviewer use sonnet', () => {
   const expected = {
-    'design-to-code-pm.md':        'opus',
-    'design-to-code-mapper.md':    'opus',
-    'design-to-code-extractor.md': 'opus',
-    'design-to-code-planner.md':   'opus',
-    'design-to-code-auditor.md':   'sonnet',
-    'design-to-code-reviewer.md':  'sonnet',
+    'canvas-to-code-pm.md':        'opus',
+    'canvas-to-code-mapper.md':    'opus',
+    'canvas-to-code-extractor.md': 'opus',
+    'canvas-to-code-planner.md':   'opus',
+    'canvas-to-code-auditor.md':   'sonnet',
+    'canvas-to-code-reviewer.md':  'sonnet',
   };
   for (const [file, model] of Object.entries(expected)) {
     const fm = parseFrontmatter(join(ROOT, 'agents', file));

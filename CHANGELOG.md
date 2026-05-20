@@ -23,13 +23,13 @@ All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridg
 
 ### Changed
 
-- **PM agent dispatch tree.** `agents/design-to-code-pm.md` now opens with an explicit flag-parsing dispatch tree (no flags → discovery; `--prep` → scaffold-only; `--pr` → reviewer; `--feature` → resume; `--gate` → jump/re-run) and the guided discovery section.
+- **PM agent dispatch tree.** `agents/canvas-to-code-pm.md` now opens with an explicit flag-parsing dispatch tree (no flags → discovery; `--prep` → scaffold-only; `--pr` → reviewer; `--feature` → resume; `--gate` → jump/re-run) and the guided discovery section.
 - **README** rewritten around the three-command surface; added an "Upgrading from 0.2.x" migration table.
 - **DESIGN_TO_CODE_RULES.md** §5 documents the new timestamp fields + backfill rule; the Command Context section reflects the new surface.
 
 ### Deferred to v0.4.0
 
-- **Internal agent rename.** Agent filenames (`design-to-code-pm.md`, `-extractor.md`, `-mapper.md`, etc.) and skill filenames retain the legacy `design-to-code-` prefix in this release. They're an implementation detail visible only when explicitly `@`-mentioning an agent; renaming them now would churn ~20 cross-references for cosmetic benefit. Plan: bundle the internal rename into a focused v0.4.0 cleanup PR.
+- **Internal agent rename.** Agent filenames (`canvas-to-code-pm.md`, `-extractor.md`, `-mapper.md`, etc.) and skill filenames retain the legacy `design-to-code-` prefix in this release. They're an implementation detail visible only when explicitly `@`-mentioning an agent; renaming them now would churn ~20 cross-references for cosmetic benefit. Plan: bundle the internal rename into a focused v0.4.0 cleanup PR.
 
 ### Notes
 
@@ -41,7 +41,7 @@ All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridg
 ### Added
 
 - **Gate 6 — Data binding.** New gate sits between Component mapping (Gate 5) and Slice plan. Classifies every mapped unit as `backend` (wire to an existing service), `mock` (emit a schema + JSON + TS-interface triple under hierarchical `data/<page>/<subpage>/`), or `none` (decorative). Low-confidence rows must be acknowledged before advancing.
-- **`design-to-code-data-binder` subagent** — 7th subagent, owns Gate 6. Walks the consumer's `lib/services/`, `hooks/`, and route tree to propose the binding tier per unit and queue mock-file triples for the planner.
+- **`canvas-to-code-data-binder` subagent** — 7th subagent, owns Gate 6. Walks the consumer's `lib/services/`, `hooks/`, and route tree to propose the binding tier per unit and queue mock-file triples for the planner.
 - **`templates/gate-failures/6-data-binding.md`** — per-gate failure message template for low-confidence bindings, page/subpage conflicts, and backend overrides.
 
 ### Changed
@@ -52,7 +52,7 @@ All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridg
   - Pre-swap: Gate 8 → Gate 9
   - Pre-retro: Gate 9 → Gate 10
 - **`templates/gate-failures/9-pre-retro.md` → `10-pre-retro.md`** (renamed).
-- **`agents/design-to-code-pm.md`** — updated to reference "eleven gates"; Gate 6 section added between Gate 5 and Gate 7.
+- **`agents/canvas-to-code-pm.md`** — updated to reference "eleven gates"; Gate 6 section added between Gate 5 and Gate 7.
 - **`DESIGN_TO_CODE_RULES.md`** — expanded to document the data-binding gate and the hierarchical `data/<page>/<subpage>/` convention (~24% growth).
 
 ### Notes
@@ -66,8 +66,8 @@ All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridg
 - Plugin scaffold: `.claude-plugin/plugin.json` manifest.
 - `DESIGN_TO_CODE_RULES.md` — portable rules file for subagent behavior (lifts KARIMO_RULES.md shape).
 - 10 commands under `commands/design-to-code/`: `start`, `prep`, `plan`, `validate`, `slice`, `swap`, `retro`, `dashboard`, `status`, `review`.
-- 6 subagents: `design-to-code-pm` (Opus, orchestrator), `-extractor` (Opus), `-auditor` (Sonnet), `-mapper` (Opus, keystone), `-planner` (Opus), `-reviewer` (Sonnet).
-- 2 skills: `design-to-code-guardrails` (editor-time lint reminders), `design-to-code-vocabulary` (base/ds/custom tier model).
+- 6 subagents: `canvas-to-code-pm` (Opus, orchestrator), `-extractor` (Opus), `-auditor` (Sonnet), `-mapper` (Opus, keystone), `-planner` (Opus), `-reviewer` (Sonnet).
+- 2 skills: `canvas-to-code-guardrails` (editor-time lint reminders), `canvas-to-code-vocabulary` (base/ds/custom tier model).
 - 2 opt-in hooks: `pre-commit-guardrails.sh`, `post-merge-cleanup.sh`.
 - 7 templates + 10 per-gate failure messages.
 - 2 consumer-config examples: `config.example.yaml`, `token-map.example.yaml`.

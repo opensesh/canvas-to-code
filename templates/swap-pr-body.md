@@ -34,4 +34,4 @@ Swap the {{target_route}}-hifi parallel route into {{target_route}}. {{1 sentenc
 
 ---
 
-Final swap for the {{feature}} redesign via [Design-to-Code Bridge](https://github.com/opensesh/design-to-code-bridge). Cheap to revert — `git revert {{commit-sha}}` restores the prior page.
+Final swap for the {{feature}} redesign via [canvas-to-code](https://github.com/opensesh/canvas-to-code). Cheap to revert — `git revert {{commit-sha}}` restores the prior page.

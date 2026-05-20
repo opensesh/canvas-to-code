@@ -186,8 +186,8 @@ Mid-flight features keep working — `status.json` is forward-compatible, and th
 | Surface | Count | Notes |
 |---|---|---|
 | **Commands** | 3 | All under `commands/`: `start`, `dashboard`, `assets`. |
-| **Subagents** | 7 | `design-to-code-pm` (Opus, the orchestrator) · `-extractor` (Opus) · `-auditor` (Sonnet) · `-mapper` (Opus, keystone) · `-data-binder` (Opus) · `-planner` (Opus) · `-reviewer` (Sonnet). Agent filenames retain the legacy `design-to-code-` prefix; internal rename deferred to v0.4.0. |
-| **Skills** | 2 | `design-to-code-guardrails` (auto-activates in `.claude-design/` projects) · `design-to-code-vocabulary` (base/ds/custom tier model). |
+| **Subagents** | 7 | `canvas-to-code-pm` (Opus, the orchestrator) · `-extractor` (Opus) · `-auditor` (Sonnet) · `-mapper` (Opus, keystone) · `-data-binder` (Opus) · `-planner` (Opus) · `-reviewer` (Sonnet). |
+| **Skills** | 2 | `canvas-to-code-guardrails` (auto-activates in `.claude-design/` projects) · `canvas-to-code-vocabulary` (base/ds/custom tier model). |
 | **Hooks** | 2 | `pre-commit-guardrails.sh` (opt-in hard gate) · `post-merge-cleanup.sh` (opt-in slice-branch + worktree cleanup). |
 | **Templates** | 7 + 10 | Plan, slice/swap/retro PR bodies, designer handoff, spike, dashboard; plus 10 per-gate failure messages. |
 

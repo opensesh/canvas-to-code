@@ -1,5 +1,5 @@
 ---
-name: design-to-code-extractor
+name: canvas-to-code-extractor
 description: Decodes any design-source HTML (Claude Design bundle, Figma Export-to-Code, V0, Lovable, Webflow, generic HTML) into a flat JSX/HTML reference. Deterministic.
 model: opus
 tools: Read, Grep
@@ -19,7 +19,7 @@ You decode design exports into a flat, structured reference the mapper can walk.
 `/tmp/<feature>-template.tsx` — a flat JSX file containing the structural intent of the design.
 
 ```tsx
-// design-to-code-extractor — <feature> · source: claude-design
+// canvas-to-code-extractor — <feature> · source: claude-design
 // Generated: <ISO>
 
 export const Template = () => (
@@ -97,7 +97,7 @@ For v0.1.0, emit a `// TODO` and pass through.
 No `review.html` → no extraction. Write a stub:
 
 ```tsx
-// design-to-code-extractor — <feature> · source: screenshot-only
+// canvas-to-code-extractor — <feature> · source: screenshot-only
 // No HTML export. The planner operates against screenshots in
 // .claude-design/<feature>/screenshots/.
 export const Template = null;
@@ -117,4 +117,4 @@ Default fallback — same as v0/lovable.
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

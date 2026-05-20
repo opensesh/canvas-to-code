@@ -9,7 +9,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PM_PATH = join(ROOT, 'agents/design-to-code-pm.md');
+const PM_PATH = join(ROOT, 'agents/canvas-to-code-pm.md');
 
 function loadPm() {
   return readFileSync(PM_PATH, 'utf8');

@@ -45,7 +45,10 @@ test('agents/ exists with 7 subagents', () => {
   assert.equal(files.length, 7);
   const expected = ['pm', 'extractor', 'auditor', 'mapper', 'planner', 'reviewer', 'data-binder'];
   for (const name of expected) {
-    assert.ok(files.includes(`design-to-code-${name}.md`), `missing agent: design-to-code-${name}.md`);
+    assert.ok(files.includes(`canvas-to-code-${name}.md`), `missing agent: canvas-to-code-${name}.md`);
+  }
+  for (const name of expected) {
+    assert.ok(!files.includes(`design-to-code-${name}.md`), `legacy design-to-code-${name}.md must be removed`);
   }
 });
 
@@ -53,8 +56,8 @@ test('skills/ exists with 2 skills', () => {
   const dir = join(ROOT, 'skills');
   const files = readdirSync(dir).filter((f) => f.endsWith('.md'));
   assert.equal(files.length, 2);
-  assert.ok(files.includes('design-to-code-guardrails.md'));
-  assert.ok(files.includes('design-to-code-vocabulary.md'));
+  assert.ok(files.includes('canvas-to-code-guardrails.md'));
+  assert.ok(files.includes('canvas-to-code-vocabulary.md'));
 });
 
 test('hooks/ exists with 2 executable shell scripts', () => {

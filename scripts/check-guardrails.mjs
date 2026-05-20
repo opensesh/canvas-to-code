@@ -4,7 +4,7 @@
 // Used by:
 //   - hooks/pre-commit-guardrails.sh (passes the staged diff via stdin)
 //   - tests/09-guardrail-detection.test.mjs
-//   - design-to-code-guardrails skill (informational only)
+//   - canvas-to-code-guardrails skill (informational only)
 //
 // Modes:
 //   --stdin --format text   → reads diff from stdin, prints one finding per line, exit 0 if clean, 1 if findings.

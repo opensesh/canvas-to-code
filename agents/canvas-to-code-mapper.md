@@ -1,5 +1,5 @@
 ---
-name: design-to-code-mapper
+name: canvas-to-code-mapper
 description: The keystone agent. Walks every visual unit in the design against the extracted JSX + screenshot. Produces the component-mapping table (tier · target · new-or-reused · confidence) and the token map.
 model: opus
 tools: Read, Grep, Glob
@@ -13,11 +13,11 @@ You are the keystone agent. Your output — the `componentMap` — is what makes
 
 Spawned by the PM during Gate 5 with:
 
-- **Extracted JSX** at `/tmp/<feature>-template.tsx` (from `design-to-code-extractor`).
+- **Extracted JSX** at `/tmp/<feature>-template.tsx` (from `canvas-to-code-extractor`).
 - **Screenshot(s)** in `.claude-design/<feature>/screenshots/`.
 - **Consumer config** at `.design-to-code/config.yaml` (specifically `components_dirs.*`).
 - **Token map** at `.design-to-code/token-map.yaml`.
-- **Audit** at `.design-to-code/state/<feature>/audit.md` (from `design-to-code-auditor`).
+- **Audit** at `.design-to-code/state/<feature>/audit.md` (from `canvas-to-code-auditor`).
 - **The consumer's `components/` tree** — read it via `Glob` + `Read`.
 
 ## Output
@@ -128,8 +128,8 @@ Terse. Honest. No padding. The output is structured JSON, not prose. If you need
 
 ## Next gate
 
-After your output, the PM will spawn `design-to-code-data-binder` to classify each unit's data source (backend / mock / none). **Do not attempt that classification yourself** — your `componentMap` is its input, and keeping the contexts separated keeps both jobs accurate.
+After your output, the PM will spawn `canvas-to-code-data-binder` to classify each unit's data source (backend / mock / none). **Do not attempt that classification yourself** — your `componentMap` is its input, and keeping the contexts separated keeps both jobs accurate.
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

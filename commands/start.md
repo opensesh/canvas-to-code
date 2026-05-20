@@ -6,14 +6,14 @@ argument-hint: "[--feature <name>] [--gate <n>] [--prep] [--pr <num>]"
 
 # /canvas-to-code:start — Universal workflow entry
 
-One command, all eleven gates. Spawns `@design-to-code-pm.md`, which inspects `.claude-design/` and `.design-to-code/state/`, then routes by flag or by current phase.
+One command, all eleven gates. Spawns `@canvas-to-code-pm.md`, which inspects `.claude-design/` and `.design-to-code/state/`, then routes by flag or by current phase.
 
 ## How it dispatches
 
 | Flags | Behavior |
 |---|---|
 | `--prep <feature>` (or `--feature <name> --prep`) | **Scaffold only.** Creates `.claude-design/<feature>/` + `screenshots/`, `source-meta.yaml` stub, `notes.md` stub. No conversation. Refuses if the folder already exists. |
-| `--pr <num>` | **Review a slice PR.** Spawns `@design-to-code-reviewer.md` with the PR diff + the slice spec from `status.json.slices[]`. Returns PASS/REVISE with file:line citations. |
+| `--pr <num>` | **Review a slice PR.** Spawns `@canvas-to-code-reviewer.md` with the PR diff + the slice spec from `status.json.slices[]`. Returns PASS/REVISE with file:line citations. |
 | `--gate <n>` | **Jump to gate `n`** (0–10). Re-runs that gate fresh, or for the first time if not yet reached. `--gate 5` is the canonical "re-validate the component mapping" shortcut. |
 | `--feature <name>` (alone) | Resolve to that feature and auto-advance from its next pending gate. |
 | _(no flags)_ | **Guided discovery.** PM scans `.claude-design/` and presents a menu of what's there (see below). |
@@ -41,11 +41,11 @@ When called with no flags, the PM agent walks the user through a discovery scan 
 | 0 | Intake | PM conversation (feature, route, materials, source tool) |
 | 1 | Materials check | PM (verifies `review.html` + ≥1 screenshot) |
 | 2 | DS alignment | PM (verifies `source-meta.yaml`, tokens, lint heuristics) |
-| 3 | Target surface audit | `@design-to-code-auditor.md` |
+| 3 | Target surface audit | `@canvas-to-code-auditor.md` |
 | 4 | Scope confirmation | PM conversation |
-| 5 | Component mapping **(keystone)** | `@design-to-code-extractor.md` → `@design-to-code-mapper.md` |
-| 6 | Data binding | `@design-to-code-data-binder.md` |
-| 7 | Slice plan | `@design-to-code-planner.md` (writes spike + plan doc) |
+| 5 | Component mapping **(keystone)** | `@canvas-to-code-extractor.md` → `@canvas-to-code-mapper.md` |
+| 6 | Data binding | `@canvas-to-code-data-binder.md` |
+| 7 | Slice plan | `@canvas-to-code-planner.md` (writes spike + plan doc) |
 | 8 | Pre-slice | PM (per-slice preflight + slice PR body) |
 | 9 | Pre-swap | PM (final swap PR body) |
 | 10 | Pre-retro | PM (conversational retro, flips spike to `closed`) |

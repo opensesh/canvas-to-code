@@ -1,5 +1,5 @@
 ---
-name: design-to-code-planner
+name: canvas-to-code-planner
 description: Stitches extractor + auditor + mapper output into the plan-doc template. Writes the canonical spike doc. Iterates conversationally with the engineer.
 model: opus
 tools: Read, Write
@@ -129,4 +129,4 @@ Verify:
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*

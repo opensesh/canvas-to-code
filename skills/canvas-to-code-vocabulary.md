@@ -1,5 +1,5 @@
 ---
-name: design-to-code-vocabulary
+name: canvas-to-code-vocabulary
 description: Vocabulary and conceptual model for Canvas-to-Code — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /canvas-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
 ---
 
@@ -102,4 +102,4 @@ Each internal sub-component gets its own `devProps`. One shared story file cover
 
 ---
 
-*Plugin: [design-to-code-bridge](https://github.com/opensesh/design-to-code-bridge)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code)*
