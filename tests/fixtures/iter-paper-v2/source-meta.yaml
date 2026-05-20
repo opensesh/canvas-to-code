@@ -1,0 +1,17 @@
+metaVersion: 2 # schema version — bridge errors on unknown values
+source: paper # one of: paper | claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html
+feature: brain # URL path segment 1 (slug)
+subpage: home # URL path segment 2, or 'home' if URL is the feature index
+targetRoute: /brain # what Gate 3 (auditor) checks
+jsxPath: jsx/brain-home.tsx # relative to the iter folder
+primaryScreenshot: screenshots/01-baseline.png # relative to the iter folder
+
+# Optional informational fields preserved but ignored by the bridge:
+exportedAt: 2026-05-19T18:00:00Z
+exportedBy: paper-design skill
+paperArtboardName: BOS Brain — Home (iter-01 baseline)
+templateVersion: shell-v1
+notes: |
+  Fixture iter for the canvas-to-code test suite. Real-shape minimal — a single
+  page-level React component plus one stub screenshot. The bridge ingests this
+  shape directly via Gate 0 picker → Gate 1 snapshot → Gate 5a JSX short-circuit.

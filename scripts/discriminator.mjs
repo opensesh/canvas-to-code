@@ -1,20 +1,37 @@
 #!/usr/bin/env node
-// discriminator.mjs — Detect the source type of a design export.
+// discriminator.mjs — Detect the source type AND shape of a design export.
 //
-// Pure function. Reads the first 2 KB of `review.html` (or detects
-// screenshot-only when there is no `review.html`) and returns one of:
-//   claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html
+// Two shapes:
+//   - 'iter' — a folder containing source-meta.yaml with metaVersion: 2.
+//              The yaml's `source:` field is authoritative for type.
+//   - 'flat' — a folder with review.html (or screenshots-only). Type is
+//              inferred from the first 2 KB of review.html using signature
+//              matching, or from screenshot/empty-folder fallbacks.
+//
+// Source types: paper | claude-design | figma | v0 | lovable | webflow |
+//               screenshot-only | generic-html
 //
 // Usage:
-//   node scripts/discriminator.mjs <feature-dir>            # CLI
-//   import { detectSourceType } from './discriminator.mjs'  // ESM
+//   node scripts/discriminator.mjs <feature-or-iter-dir>
+//   import { detectSourceType } from './discriminator.mjs'
 //
 // CLI exit codes: 0 always; output goes to stdout.
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
-import { join, basename } from 'node:path';
+import { join } from 'node:path';
 
 const SAMPLE_BYTES = 2048;
+
+const VALID_SOURCES = new Set([
+  'paper',
+  'claude-design',
+  'figma',
+  'v0',
+  'lovable',
+  'webflow',
+  'screenshot-only',
+  'generic-html',
+]);
 
 const SIGNATURES = [
   {
@@ -36,58 +53,93 @@ const SIGNATURES = [
 ];
 
 /**
- * Detect source type from a feature directory.
- * @param {string} featureDir - absolute path to .claude-design/<feature>/
- * @returns {{ type: string, signal: string | null }}
+ * Parse a flat top-level YAML block. Handles scalar values, single/double-quoted
+ * strings, and inline `# comment` trailers. Block scalars and nested maps are not
+ * required for source-meta v2's seven top-level required fields.
  */
-export function detectSourceType(featureDir) {
-  if (!existsSync(featureDir)) {
-    return { type: 'generic-html', signal: 'feature-dir-missing' };
+export function parseSimpleYaml(text) {
+  const out = {};
+  for (const rawLine of text.split('\n')) {
+    const line = rawLine.replace(/\s+#.*$/, '');
+    const m = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*?)\s*$/);
+    if (!m) continue;
+    const key = m[1];
+    let value = m[2];
+    if (value === '' || value === '|' || value === '>') continue; // block scalar — skip body
+    value = value.replace(/^['"]|['"]$/g, '');
+    out[key] = value;
+  }
+  return out;
+}
+
+/**
+ * Detect source type AND shape from a directory.
+ * @param {string} dir - absolute path to either a feature folder or an iter folder
+ * @returns {{ type: string, shape: 'iter' | 'flat', signal: string | null }}
+ */
+export function detectSourceType(dir) {
+  if (!existsSync(dir)) {
+    return { type: 'generic-html', shape: 'flat', signal: 'feature-dir-missing' };
   }
 
-  const reviewPath = join(featureDir, 'review.html');
+  // Iter shape: source-meta.yaml with metaVersion: 2 at the dir root.
+  const metaPath = join(dir, 'source-meta.yaml');
+  if (existsSync(metaPath) && statSync(metaPath).size > 0) {
+    const yaml = parseSimpleYaml(readFileSync(metaPath, 'utf8'));
+    if (String(yaml.metaVersion) === '2') {
+      const declared = (yaml.source || '').trim();
+      if (VALID_SOURCES.has(declared)) {
+        return { type: declared, shape: 'iter', signal: 'source-meta v2' };
+      }
+      return { type: 'generic-html', shape: 'iter', signal: `source-meta v2 but unknown source: '${declared}'` };
+    }
+    // metaVersion present but not 2 → reject loudly (callers can map to a Gate 1 backfill hint)
+    if (yaml.metaVersion != null) {
+      return { type: 'generic-html', shape: 'flat', signal: `unsupported metaVersion: ${yaml.metaVersion}` };
+    }
+    // No metaVersion → fall through to flat-shape detection
+  }
+
+  // Flat shape from here on.
+  const reviewPath = join(dir, 'review.html');
   const hasReview = existsSync(reviewPath) && statSync(reviewPath).size > 0;
 
-  // screenshot-only: no review.html, ≥1 PNG in screenshots/
   if (!hasReview) {
-    const screenshotsDir = join(featureDir, 'screenshots');
+    const screenshotsDir = join(dir, 'screenshots');
     if (existsSync(screenshotsDir)) {
       const pngs = readdirSync(screenshotsDir).filter((f) => f.toLowerCase().endsWith('.png'));
       if (pngs.length > 0) {
-        return { type: 'screenshot-only', signal: `${pngs.length} png(s); no review.html` };
+        return { type: 'screenshot-only', shape: 'flat', signal: `${pngs.length} png(s); no review.html` };
       }
     }
-    return { type: 'generic-html', signal: 'no review.html; no screenshots' };
+    return { type: 'generic-html', shape: 'flat', signal: 'no review.html; no screenshots' };
   }
 
-  // Filename-based v0 detection (.tsx / .jsx are sometimes saved as review.html.tsx — uncommon, but handled)
   if (/\.(tsx|jsx)$/i.test(reviewPath)) {
-    return { type: 'v0', signal: 'filename ends .tsx/.jsx' };
+    return { type: 'v0', shape: 'flat', signal: 'filename ends .tsx/.jsx' };
   }
 
-  // Read the first 2 KB of review.html
   const fd = readFileSync(reviewPath);
   const sample = fd.slice(0, SAMPLE_BYTES).toString('utf8');
 
-  // v0/Lovable also leave a comment in the first 2 KB
   if (/\/\/\s*v0(\.dev)?\b/i.test(sample) || /<!--\s*v0/i.test(sample)) {
-    return { type: 'v0', signal: 'v0 marker in head' };
+    return { type: 'v0', shape: 'flat', signal: 'v0 marker in head' };
   }
 
   for (const sig of SIGNATURES) {
     if (sig.match(sample)) {
-      return { type: sig.type, signal: `signature matched: ${sig.type}` };
+      return { type: sig.type, shape: 'flat', signal: `signature matched: ${sig.type}` };
     }
   }
 
-  return { type: 'generic-html', signal: 'no signature matched' };
+  return { type: 'generic-html', shape: 'flat', signal: 'no signature matched' };
 }
 
 // CLI
 if (import.meta.url === `file://${process.argv[1]}`) {
   const target = process.argv[2];
   if (!target) {
-    console.error('usage: node discriminator.mjs <feature-dir>');
+    console.error('usage: node discriminator.mjs <feature-or-iter-dir>');
     process.exit(2);
   }
   const result = detectSourceType(target);
