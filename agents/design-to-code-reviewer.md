@@ -11,7 +11,7 @@ You validate one slice PR against its plan-doc slice spec. You return a structur
 
 ## Inputs
 
-When spawned by `/design-to-code:review <pr>`:
+When spawned by `/canvas-to-code:start --pr <num>`:
 
 - The PR number.
 - `status.json.slices[]` from the corresponding `.design-to-code/state/<feature>/`.

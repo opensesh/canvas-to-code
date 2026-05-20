@@ -81,4 +81,4 @@ Read before starting:
 
 ## Retro deliverable
 
-To be filled by `/design-to-code:retro` at the end. Empty stub at plan time.
+To be filled by `/canvas-to-code:start --gate 10` at the end. Empty stub at plan time.

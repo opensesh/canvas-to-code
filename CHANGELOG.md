@@ -1,6 +1,40 @@
 # Changelog
 
-All notable changes to the Design-to-Code Bridge plugin are documented here. Follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridge`) are documented here. Follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.3.0] — 2026-05-19
+
+### BREAKING
+
+- **Plugin renamed** `design-to-code-bridge` → `canvas-to-code`. Slash-command namespace changes from `/design-to-code-bridge:design-to-code:*` to `/canvas-to-code:*`. The doubled `design-to-code` prefix is gone, fixing the truncation problem in the slash-command picker.
+- **Marketplace renamed** `design-to-code-bridge-marketplace` → `canvas-to-code-marketplace`. Repo rename `opensesh/design-to-code-bridge` → `opensesh/canvas-to-code` is a separate GitHub UI action; install from the new marketplace once it's complete.
+- **Command surface collapsed** from 10 commands to 3:
+  - `/canvas-to-code:start` subsumes start, prep, plan, validate, slice, swap, retro, review via flags (`--feature`, `--gate`, `--prep`, `--pr`).
+  - `/canvas-to-code:dashboard` subsumes the old `status` + `dashboard`.
+  - `/canvas-to-code:assets` is new — a file-inventory view of `.claude-design/<feature>/`.
+
+  Total flag set across the three commands: `--feature`, `--gate`, `--prep`, `--pr`, `--json` (5 flags). Migration map lives in [README → Upgrading from 0.2.x](./README.md#upgrading-from-02x).
+- **Folder flattened** `commands/design-to-code/*.md` → `commands/*.md`. The `commands/design-to-code/` subdirectory is removed.
+
+### Added
+
+- **Guided discovery scan in `/canvas-to-code:start`.** When called with no flags, the PM agent scans `.claude-design/` and presents a menu: resume an active feature, import loose materials, or start fresh. PM never silently auto-advances past Gate 0 without showing the discovery summary.
+- **`status.json` lifecycle timestamps** — `created_at`, `last_touched_at`, `completed_at`, and per-slice `started_at` / `merged_at` / `pr_number`. The dashboard's "when it was done" column reads these. PM backfills absent fields from `gateLog` silently on first read; no separate migration script.
+
+### Changed
+
+- **PM agent dispatch tree.** `agents/design-to-code-pm.md` now opens with an explicit flag-parsing dispatch tree (no flags → discovery; `--prep` → scaffold-only; `--pr` → reviewer; `--feature` → resume; `--gate` → jump/re-run) and the guided discovery section.
+- **README** rewritten around the three-command surface; added an "Upgrading from 0.2.x" migration table.
+- **DESIGN_TO_CODE_RULES.md** §5 documents the new timestamp fields + backfill rule; the Command Context section reflects the new surface.
+
+### Deferred to v0.4.0
+
+- **Internal agent rename.** Agent filenames (`design-to-code-pm.md`, `-extractor.md`, `-mapper.md`, etc.) and skill filenames retain the legacy `design-to-code-` prefix in this release. They're an implementation detail visible only when explicitly `@`-mentioning an agent; renaming them now would churn ~20 cross-references for cosmetic benefit. Plan: bundle the internal rename into a focused v0.4.0 cleanup PR.
+
+### Notes
+
+- **No alias commands.** Old slash paths cease to exist with the plugin rename; aliases would just regrow the surface area we just collapsed. Migrate via the table in README.
+- **Mid-flight features keep working.** `status.json` is additively forward-compatible. The PM's first read of a pre-0.3.0 file backfills `created_at = gateLog[0].atISO` and writes the file back.
 
 ## [0.2.0] — 2026-05-19
 
@@ -23,7 +57,7 @@ All notable changes to the Design-to-Code Bridge plugin are documented here. Fol
 
 ### Notes
 
-- This is a breaking change for any consumer who has frozen `status.json` snapshots from v0.1.0 — gate numbers ≥ 6 have shifted by 1. Run `/design-to-code:start` on existing features to re-validate against the new gate ordering.
+- This is a breaking change for any consumer who has frozen `status.json` snapshots from v0.1.0 — gate numbers ≥ 6 have shifted by 1. Run the workflow command on existing features to re-validate against the new gate ordering.
 
 ## [0.1.0] — 2026-05-12
 

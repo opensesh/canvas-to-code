@@ -30,6 +30,6 @@ Slice {{n-1}} ({{prev_title}}) has `merged: false`. Either merge it first, or ov
 
 ## Plan drift
 
-The plan doc's slice {{n}} spec doesn't match `status.json.slices[{{n}}]`. Run `/design-to-code:validate {{feature}}` to refresh from the mapping, or hand-resolve the diff.
+The plan doc's slice {{n}} spec doesn't match `status.json.slices[{{n}}]`. Run `/canvas-to-code:start --feature {{feature}} --gate 5` to refresh the mapping, or hand-resolve the diff.
 
-Re-run `/design-to-code:slice {{n}}` after resolving.
+Re-run `/canvas-to-code:start --feature {{feature}} --gate 8` after resolving.

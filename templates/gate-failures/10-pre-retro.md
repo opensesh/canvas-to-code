@@ -10,7 +10,7 @@ Need a clean main before we close out.
 {{command_output}}
 ```
 
-Push a fix commit, then re-run `/design-to-code:retro`.
+Push a fix commit, then re-run `/canvas-to-code:start --gate 10`.
 
 ## Spike doc missing
 
@@ -27,4 +27,4 @@ git push origin --delete {{featureBranch}}
 git branch -D {{featureBranch}}
 ```
 
-Re-run `/design-to-code:retro` after resolving. This gate is `warn` by default — you can also skip it if your project doesn't enforce green CI on main.
+Re-run `/canvas-to-code:start --gate 10` after resolving. This gate is `warn` by default — you can also skip it if your project doesn't enforce green CI on main.

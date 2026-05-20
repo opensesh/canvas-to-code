@@ -1,16 +1,16 @@
-# Design-to-Code Bridge
+# Canvas-to-Code
 
-> Translate any design export — HTML + screenshot — into design-system-aligned production code, with ten explicit gates that catch drift before it ships.
+> Translate any design export — HTML + screenshot — into design-system-aligned production code, with eleven explicit gates that catch drift before it ships.
 
-[![tests](https://github.com/opensesh/design-to-code-bridge/actions/workflows/test.yml/badge.svg)](https://github.com/opensesh/design-to-code-bridge/actions/workflows/test.yml)
-[![version](https://img.shields.io/badge/version-0.1.0-blue.svg)](./CHANGELOG.md)
+[![tests](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml/badge.svg)](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml)
+[![version](https://img.shields.io/badge/version-0.3.0-blue.svg)](./CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange.svg)](https://docs.claude.com/claude-code)
 
 ```
 ┌──────────────────────┐       ┌──────────────────────────┐       ┌─────────────────────────┐
-│   Design tool        │       │   Design-to-Code Bridge  │       │   Your codebase         │
-│   ───────────        │       │   ─────────────────────  │       │   ──────────────        │
+│   Design tool        │       │   Canvas-to-Code         │       │   Your codebase         │
+│   ───────────        │       │   ──────────────         │       │   ──────────────        │
 │   Claude Design      │       │                          │       │                         │
 │   Figma + UUI    ────┼──────▶│   1. Intake              │──────▶│   DS-aligned code       │
 │   V0 / Lovable       │       │   2. Materials           │       │   Token-mapped JSX      │
@@ -40,10 +40,10 @@ It started inside [Open Session](https://opensession.co)'s Brand OS (BOS) codeba
 
 ## Who it's for
 
-- **Designers initiating a handoff** — drop an HTML export + a screenshot, run `/design-to-code:start`, the PM agent walks the intake conversation. No engineering knowledge required to begin.
-- **Engineers implementing the handoff** — `/design-to-code:plan` produces a component-mapping table (every visual unit categorized base/ds/custom/net-new) and a slice plan. `/design-to-code:slice <n>` runs Gate 8 preflight + drafts the PR body.
-- **Reviewers** — `/design-to-code:review <pr>` validates a slice PR against the plan's slice spec. Returns PASS/REVISE with file:line citations.
-- **Design-system leads** — `/design-to-code:dashboard` aggregates every bridged feature into one view: PRs, LOC, and a **component +/− diff** showing reuse vs. net-new. Successful runs trend toward higher reuse and fewer net-new components over time.
+- **Designers initiating a handoff** — drop an HTML export + a screenshot, run `/canvas-to-code:start`, the PM agent walks the intake conversation. No engineering knowledge required to begin.
+- **Engineers implementing the handoff** — `/canvas-to-code:start --feature <name>` auto-advances through Gates 3–7 to produce a component-mapping table (every visual unit categorized base/ds/custom/net-new) and a slice plan. `/canvas-to-code:start --gate 8` runs the slice preflight + drafts the PR body for the current slice.
+- **Reviewers** — `/canvas-to-code:start --pr <num>` validates a slice PR against the plan's slice spec. Returns PASS/REVISE with file:line citations.
+- **Design-system leads** — `/canvas-to-code:dashboard` aggregates every bridged feature into one view: PRs, LOC, timestamps, and a **component +/− diff** showing reuse vs. net-new. Successful runs trend toward higher reuse and fewer net-new components over time.
 
 ---
 
@@ -61,7 +61,7 @@ The PM agent walks every handoff through eleven gates and refuses to advance whe
 | 5 | **Component mapping** ◆ | The keystone. Every visual unit gets tier + target + new-or-reused + confidence. Low-confidence rows must be acknowledged. |
 | 6 | **Data binding** | Classifies each unit as `backend` (wire to existing service), `mock` (emit JSON Schema + mock JSON + TS interface under `data/<page>/<subpage>/`), or `none`. The schema is the durable contract that informs the production DB. |
 | 7 | **Slice plan** | Default rhythm: scaffold → chrome → cards → wire data → secondary → swap. 150–550 LOC per slice. Mock/schema/type files allocated to the slice that consumes them. |
-| 8 | **Pre-slice** | Branch identity, working-tree cleanliness, prior-slice-merged checks before every `/design-to-code:slice <n>`. |
+| 8 | **Pre-slice** | Branch identity, working-tree cleanliness, prior-slice-merged checks before every `/canvas-to-code:start --gate 8`. |
 | 9 | **Pre-swap** | Behaviour-port checklist verified, parallel route 200s, dropped routes deletion-ready. |
 | 10 | **Pre-retro** | Swap merged, typecheck + build green on main. |
 
@@ -74,9 +74,9 @@ Gate 5 (component mapping) is what makes everything downstream cheap. Gate 6 (da
 Inside any Claude Code project:
 
 ```
-/plugin marketplace add opensesh/design-to-code-bridge
-/plugin install design-to-code-bridge@design-to-code-bridge-marketplace
-/design-to-code:start
+/plugin marketplace add opensesh/canvas-to-code
+/plugin install canvas-to-code@canvas-to-code-marketplace
+/canvas-to-code:start
 ```
 
 That's it — the PM agent takes you through Gate 0 and writes everything else.
@@ -86,15 +86,15 @@ That's it — the PM agent takes you through Gate 0 and writes everything else.
 To pull the latest version after a release:
 
 ```
-/plugin marketplace update design-to-code-bridge-marketplace
-/plugin update design-to-code-bridge
+/plugin marketplace update canvas-to-code-marketplace
+/plugin update canvas-to-code
 ```
 
 If your Claude Code build doesn't ship `/plugin update`, fall back to:
 
 ```
-/plugin uninstall design-to-code-bridge
-/plugin install design-to-code-bridge@design-to-code-bridge-marketplace
+/plugin uninstall canvas-to-code
+/plugin install canvas-to-code@canvas-to-code-marketplace
 ```
 
 Both paths reliably pick up new versions because every release bumps `.claude-plugin/plugin.json`'s `version` field (enforced by [`version-check.yml`](./.github/workflows/version-check.yml) on every PR).
@@ -132,7 +132,7 @@ disabled_bg: "disabled:bg-bg-disabled_subtle"
 
 ### `.claude-design/<feature>/`
 
-Committed design sources, one folder per feature. Always: `review.html`, a `screenshots/` folder with ≥1 PNG, and `source-meta.yaml` declaring the design tool. Iterating later? Re-run `/design-to-code:start` and the PM picks up from `status.json`.
+Committed design sources, one folder per feature. Always: `review.html`, a `screenshots/` folder with ≥1 PNG, and `source-meta.yaml` declaring the design tool. Iterating later? Re-run `/canvas-to-code:start` and the PM picks up from `status.json` — the discovery scan offers to resume.
 
 ### `.design-to-code/state/<feature>/status.json`
 
@@ -142,18 +142,42 @@ Per-feature state. Gitignored by default. Holds `phase`, `gateLog[]`, `component
 
 ## Command reference
 
-| Command | Persona | What it does |
+Three commands. Five flags. The PM agent does everything else.
+
+| Command | What it does | Flags |
 |---|---|---|
-| `/design-to-code:start` | Any | Canonical entry. PM runs Gate 0 (intake) — what are you building, materials check, source tool. Resumable. |
-| `/design-to-code:prep <feature>` | Designer | Power-user shortcut — scaffolds `.claude-design/<feature>/` without the conversational interview. |
-| `/design-to-code:plan <feature>` | Engineer | Runs Gates 3–7 end-to-end. Writes the plan doc + spike. |
-| `/design-to-code:validate <feature>` | Engineer | Re-runs Gate 5 (mapping) standalone. |
-| `/design-to-code:slice <n>` | Engineer | Gate 8 preflight + slice PR body. Updates `status.json.slices[]`. |
-| `/design-to-code:swap` | Engineer | Gate 9 preflight + swap PR body. |
-| `/design-to-code:retro` | Engineer | Gate 10 + PM-led retro interview. |
-| `/design-to-code:dashboard` | Any | Cross-feature evaluation view with PR cross-refs and component +/− diff. |
-| `/design-to-code:status [<feature>]` | Any | Prints `status.json` summary for one feature or all. |
-| `/design-to-code:review <pr>` | Reviewer | Validates a slice PR diff against the plan's slice spec. |
+| `/canvas-to-code:start` | Universal workflow. With no flags, scans `.claude-design/` and presents a guided menu (resume an active feature, import loose materials, or start fresh). With flags, dispatches to a specific mode. | `--feature <name>` · `--gate <0-10>` · `--prep` · `--pr <num>` |
+| `/canvas-to-code:dashboard` | Work timeline: what's done, what's in progress, when it happened, PR + doc links. Cross-feature by default; per-feature with `--feature`. | `--feature <name>` · `--json` |
+| `/canvas-to-code:assets` | File inventory under `.claude-design/<feature>/`: counts by type, paths, presence of standard artifacts (review.html, screenshots, source-meta, plan, spike). | `--feature <name>` · `--json` |
+
+### Flag cheat sheet
+
+| Flag | Lives on | Purpose |
+|---|---|---|
+| `--feature <name>` | `start`, `dashboard`, `assets` | Scope to one feature. On `start`, resumes from the next pending gate. |
+| `--gate <0-10>` | `start` | Jump to or re-run a specific gate. `--gate 5` re-validates the component mapping; `--gate 8/9/10` runs slice / swap / retro preflight. |
+| `--prep` | `start` | Scaffold `.claude-design/<feature>/` only — no conversational intake. |
+| `--pr <num>` | `start` | Validate a slice PR against the plan; spawns the reviewer agent. |
+| `--json` | `dashboard`, `assets` | Emit machine-readable output. |
+
+### Upgrading from 0.2.x
+
+The plugin namespace changed (`/design-to-code-bridge:design-to-code:*` → `/canvas-to-code:*`) and 10 commands collapsed to 3. Mapping:
+
+| old | new |
+|---|---|
+| `/design-to-code:start` | `/canvas-to-code:start` |
+| `/design-to-code:prep <f>` | `/canvas-to-code:start --feature <f> --prep` |
+| `/design-to-code:plan <f>` | `/canvas-to-code:start --feature <f>` (auto-runs Gates 3–7) |
+| `/design-to-code:validate <f>` | `/canvas-to-code:start --feature <f> --gate 5` |
+| `/design-to-code:slice <n>` | `/canvas-to-code:start --gate 8` |
+| `/design-to-code:swap` | `/canvas-to-code:start --gate 9` |
+| `/design-to-code:retro` | `/canvas-to-code:start --gate 10` |
+| `/design-to-code:review <pr>` | `/canvas-to-code:start --pr <num>` |
+| `/design-to-code:status [<f>]` | `/canvas-to-code:dashboard [--feature <f>]` |
+| `/design-to-code:dashboard` | `/canvas-to-code:dashboard` |
+
+Mid-flight features keep working — `status.json` is forward-compatible, and the PM backfills new timestamp fields on first read.
 
 ---
 
@@ -161,8 +185,8 @@ Per-feature state. Gitignored by default. Holds `phase`, `gateLog[]`, `component
 
 | Surface | Count | Notes |
 |---|---|---|
-| **Commands** | 10 | All under `commands/design-to-code/`. |
-| **Subagents** | 6 | `design-to-code-pm` (Opus, the orchestrator) · `-extractor` (Opus) · `-auditor` (Sonnet) · `-mapper` (Opus, keystone) · `-planner` (Opus) · `-reviewer` (Sonnet). |
+| **Commands** | 3 | All under `commands/`: `start`, `dashboard`, `assets`. |
+| **Subagents** | 7 | `design-to-code-pm` (Opus, the orchestrator) · `-extractor` (Opus) · `-auditor` (Sonnet) · `-mapper` (Opus, keystone) · `-data-binder` (Opus) · `-planner` (Opus) · `-reviewer` (Sonnet). Agent filenames retain the legacy `design-to-code-` prefix; internal rename deferred to v0.4.0. |
 | **Skills** | 2 | `design-to-code-guardrails` (auto-activates in `.claude-design/` projects) · `design-to-code-vocabulary` (base/ds/custom tier model). |
 | **Hooks** | 2 | `pre-commit-guardrails.sh` (opt-in hard gate) · `post-merge-cleanup.sh` (opt-in slice-branch + worktree cleanup). |
 | **Templates** | 7 + 10 | Plan, slice/swap/retro PR bodies, designer handoff, spike, dashboard; plus 10 per-gate failure messages. |
@@ -202,7 +226,7 @@ The gates, the PM flow, and the dashboard work unchanged. You don't fork; you co
 
 ## Status
 
-**v0.1.0 — initial scaffold.** Plugin core (PM agent, six subagents, ten commands, two skills, ten gate-failure messages) shipped. CI test suite green (10/10). Synthetic-feature dogfood passes. First real-feature validation pending.
+**v0.3.0 — Canvas-to-Code.** Rebranded from `design-to-code-bridge`. Slash-command surface collapsed from 10 commands to 3 (`start`, `dashboard`, `assets`), with a 5-flag set (`--feature`, `--gate`, `--prep`, `--pr`, `--json`). `start` now opens with a guided discovery scan of `.claude-design/` so the first thing the user sees is what already exists. `status.json` gains lifecycle timestamps (created_at, last_touched_at, completed_at + per-slice merged_at and pr_number); the PM backfills these silently on pre-0.3.0 files. **Breaking change** — see the Upgrading section above.
 
 See the canonical spec: [BOS-3.0 code-bridge spike](https://github.com/opensesh/BOS-3.0/blob/main/docs/spikes/design-system/2026-05/2026-05-12-code-bridge-standardization.md) (`docs/spikes/design-system/2026-05/2026-05-12-code-bridge-standardization.md` in the BOS repo).
 

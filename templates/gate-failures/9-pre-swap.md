@@ -10,7 +10,7 @@ Can't draft the swap PR until all the upstream work is verified.
 {{slices_not_merged_table}}
 ```
 
-Merge them first, then re-run `/design-to-code:swap`.
+Merge them first, then re-run `/canvas-to-code:start --gate 9`.
 
 ## Behaviour ports not verified
 
@@ -43,4 +43,4 @@ These sub-routes used to 200 but now don't:
 
 Likely caused by a route-group change in one of the slices. Inspect the slice that touched routing.
 
-Re-run `/design-to-code:swap` after resolving.
+Re-run `/canvas-to-code:start --gate 9` after resolving.

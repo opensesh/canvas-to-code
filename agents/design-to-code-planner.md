@@ -103,7 +103,7 @@ Verify:
 <Questions the planner couldn't resolve.>
 
 ## Retro deliverable
-<Filled by /design-to-code:retro at the end. Empty stub at plan time.>
+<Filled by /canvas-to-code:start --gate 10 at the end. Empty stub at plan time.>
 ```
 
 ## Voice

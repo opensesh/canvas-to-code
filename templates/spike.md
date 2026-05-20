@@ -50,7 +50,7 @@ related:
 
 {{open considerations}}
 
-## 5. Retro (filled on the final PR by /design-to-code:retro)
+## 5. Retro (filled on the final PR by /canvas-to-code:start --gate 10)
 
 ### What worked
 

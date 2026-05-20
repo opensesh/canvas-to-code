@@ -16,7 +16,7 @@
 
 **Run when ready:**
 ```
-/design-to-code:start
+/canvas-to-code:start
 ```
 
 (The PM agent will pick up `.claude-design/{{feature}}/` automatically.)

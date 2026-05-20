@@ -116,7 +116,7 @@ Did you mean one of these?
 - `/brand-hub`
 - `/brand`
 
-Run `/design-to-code:start` again to correct the route, or set `isExistingRoute: false` to proceed as greenfield.
+Run `/canvas-to-code:start --feature <name>` again to correct the route, or set `isExistingRoute: false` to proceed as greenfield.
 ```
 
 The PM uses this to ask the engineer for confirmation.

@@ -30,4 +30,4 @@ I can't proceed without **both** an HTML export and at least one screenshot.
 - Drop one or more PNGs into `screenshots/`.
 - Set `source: screenshot-only` in `source-meta.yaml`.
 
-Re-run `/design-to-code:start` when materials are ready — I'll pick up at Gate 1.
+Re-run `/canvas-to-code:start` when materials are ready — I'll pick up at Gate 1.

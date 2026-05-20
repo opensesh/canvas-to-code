@@ -1,15 +1,15 @@
 ---
 name: design-to-code-vocabulary
-description: Vocabulary and conceptual model for the Design-to-Code Bridge — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /design-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
+description: Vocabulary and conceptual model for Canvas-to-Code — base/ds/custom tier model, slice rhythm, the eleven gates, parallel-route pattern. Auto-activates when any /canvas-to-code:* command is in flight or when the user uses keywords like "tier", "slice", "bridge" in a design-to-code context.
 ---
 
-# Design-to-Code Vocabulary
+# Canvas-to-Code Vocabulary
 
-Shared mental model for designers, engineers, and reviewers working through a Design-to-Code Bridge handoff.
+Shared mental model for designers, engineers, and reviewers working through a Canvas-to-Code handoff.
 
 ## When to surface
 
-- Any `/design-to-code:*` command is in flight.
+- Any `/canvas-to-code:*` command is in flight.
 - The user mentions `tier`, `base`, `ds`, `custom-shared`, `custom-page`, `net-new`, `slice`, `swap`, `bridge`, `keystone`, or one of the gate names.
 
 ## The component tier model

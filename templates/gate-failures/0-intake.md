@@ -8,4 +8,4 @@ I need five answers before we can start. Drop any you have now; the rest we can 
 4. **Do you have an HTML export + at least one screenshot?** (file paths, or "later")
 5. **What design tool produced the export?** (`claude-design` · `figma` · `v0` · `lovable` · `webflow` · `screenshot-only` · `generic-html`)
 
-When you have all five, run `/design-to-code:start` again and I'll pick up from here.
+When you have all five, run `/canvas-to-code:start` again and I'll pick up from here.

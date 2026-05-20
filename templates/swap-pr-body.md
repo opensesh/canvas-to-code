@@ -22,7 +22,7 @@ Swap the {{target_route}}-hifi parallel route into {{target_route}}. {{1 sentenc
 
 ## Retro highlights
 
-{{empty until /design-to-code:retro fills it; can also be left to the spike doc}}
+{{empty until /canvas-to-code:start --gate 10 fills it; can also be left to the spike doc}}
 
 ## Test plan
 

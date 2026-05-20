@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pre-commit-guardrails.sh — opt-in pre-commit hook for the Design-to-Code Bridge.
+# pre-commit-guardrails.sh — opt-in pre-commit hook for Canvas-to-Code.
 #
 # When enabled in .claude/settings.json (or .git/hooks/pre-commit), this hook
 # runs the same seven guardrail checks as the design-to-code-guardrails skill,
@@ -13,14 +13,14 @@
 # (We discourage --no-verify; investigate the violation first.)
 #
 # Install:
-#   ln -sf "$PWD/.claude/plugins/design-to-code-bridge/hooks/pre-commit-guardrails.sh" .git/hooks/pre-commit
+#   ln -sf "$PWD/.claude/plugins/canvas-to-code/hooks/pre-commit-guardrails.sh" .git/hooks/pre-commit
 #   chmod +x .git/hooks/pre-commit
 #
 # Or via Claude Code settings:
 #   {
 #     "hooks": {
 #       "preToolUse": [
-#         { "tool": "Bash", "match": "^git commit", "command": "bash .claude/plugins/design-to-code-bridge/hooks/pre-commit-guardrails.sh" }
+#         { "tool": "Bash", "match": "^git commit", "command": "bash .claude/plugins/canvas-to-code/hooks/pre-commit-guardrails.sh" }
 #       ]
 #     }
 #   }
@@ -39,7 +39,7 @@ fi
 
 # Skip if the helper script is missing (defensive — should always be present).
 if [ ! -f "$CHECK_SCRIPT" ]; then
-  echo "[design-to-code] hook helper missing at $CHECK_SCRIPT — skipping" >&2
+  echo "[canvas-to-code] hook helper missing at $CHECK_SCRIPT — skipping" >&2
   exit 0
 fi
 
@@ -63,10 +63,10 @@ fi
 
 # Findings present.
 echo "" >&2
-echo "[design-to-code] guardrail violations detected (severity: $SEVERITY):" >&2
+echo "[canvas-to-code] guardrail violations detected (severity: $SEVERITY):" >&2
 echo "$FINDINGS" | sed 's/^/  /' >&2
 echo "" >&2
-echo "  See: https://github.com/opensesh/design-to-code-bridge#guardrails" >&2
+echo "  See: https://github.com/opensesh/canvas-to-code#guardrails" >&2
 echo "  Bypass (discouraged): git commit --no-verify" >&2
 echo "" >&2
 

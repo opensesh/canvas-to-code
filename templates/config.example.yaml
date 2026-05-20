@@ -36,8 +36,8 @@ guardrail_severity: warn  # warn | error
 #     ring-2: error          # escalate to error
 guardrail_overrides: {}
 
-# Where /design-to-code:dashboard --write persists output.
-dashboard_output_path: docs/spikes/design-system/design-to-code-dashboard.md
+# Where /canvas-to-code:dashboard --write persists output.
+dashboard_output_path: docs/spikes/design-system/canvas-to-code-dashboard.md
 
 # Root for per-feature status.json files. State is gitignored; the folder is not.
 state_dir: .design-to-code/state
@@ -50,8 +50,8 @@ components_dirs:
   custom_shared:  components/custom/shared
   custom_pages:   components/custom/pages
 
-# Consumer build commands. Used by /design-to-code:retro and the post-merge hook
-# to verify the feature merged cleanly. Adjust to your stack.
+# Consumer build commands. Used by /canvas-to-code:start --gate 10 and the
+# post-merge hook to verify the feature merged cleanly. Adjust to your stack.
 commands:
   typecheck: "bun run typecheck"
   build:     "bun run build"

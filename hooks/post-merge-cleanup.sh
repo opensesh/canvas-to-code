@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# post-merge-cleanup.sh — opt-in post-merge hook for the Design-to-Code Bridge.
+# post-merge-cleanup.sh — opt-in post-merge hook for Canvas-to-Code.
 #
 # Runs after a successful merge. Cleans up slice branches and worktrees once
 # their PR has merged. Lifts the pattern from KARIMO's branch lifecycle.
@@ -18,13 +18,13 @@
 #   {
 #     "hooks": {
 #       "postToolUse": [
-#         { "tool": "Bash", "match": "^gh pr merge", "command": "bash .claude/plugins/design-to-code-bridge/hooks/post-merge-cleanup.sh" }
+#         { "tool": "Bash", "match": "^gh pr merge", "command": "bash .claude/plugins/canvas-to-code/hooks/post-merge-cleanup.sh" }
 #       ]
 #     }
 #   }
 #
 # Or as a real git hook:
-#   ln -sf "$PWD/.claude/plugins/design-to-code-bridge/hooks/post-merge-cleanup.sh" .git/hooks/post-merge
+#   ln -sf "$PWD/.claude/plugins/canvas-to-code/hooks/post-merge-cleanup.sh" .git/hooks/post-merge
 
 set -euo pipefail
 
@@ -63,7 +63,7 @@ if [ -z "$MERGED_BRANCH" ]; then
   exit 0
 fi
 
-echo "[design-to-code] post-merge: $MERGED_BRANCH"
+echo "[canvas-to-code] post-merge: $MERGED_BRANCH"
 
 # Case 1: slice PR. Pattern: <feature>-pr-<n>-<slug>
 if [[ "$MERGED_BRANCH" =~ ^(.+)-pr-([0-9]+)-(.+)$ ]]; then
@@ -82,7 +82,7 @@ if [[ "$MERGED_BRANCH" =~ ^(.+)-pr-([0-9]+)-(.+)$ ]]; then
         slice.merged = true;
         slice.merged_at = new Date().toISOString();
         fs.writeFileSync(path, JSON.stringify(s, null, 2) + '\\n');
-        console.log('[design-to-code] marked slice $SLICE_N merged in', path);
+        console.log('[canvas-to-code] marked slice $SLICE_N merged in', path);
       }
     " || true
   fi
@@ -112,7 +112,7 @@ for status_file in "$STATE_DIR"/*/status.json; do
       s.phase = 'complete';
       s.completed_at = new Date().toISOString();
       fs.writeFileSync(path, JSON.stringify(s, null, 2) + '\\n');
-      console.log('[design-to-code] feature complete:', s.feature);
+      console.log('[canvas-to-code] feature complete:', s.feature);
     " || true
 
     # Delete the feature branch.

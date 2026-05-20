@@ -1,17 +1,17 @@
 ---
 name: design-to-code-guardrails
-description: Editor-time lint reminders for projects using the Design-to-Code Bridge. Auto-activates when the repo contains `.claude-design/` and the user is editing files under `app/`, `components/`, `lib/`, or `hooks/`.
+description: Editor-time lint reminders for projects using Canvas-to-Code. Auto-activates when the repo contains `.claude-design/` and the user is editing files under `app/`, `components/`, `lib/`, or `hooks/`.
 ---
 
-# Design-to-Code Guardrails
+# Canvas-to-Code Guardrails
 
-You are editing in a project that uses the Design-to-Code Bridge plugin. Apply these seven editor-time reminders **inline** as you write or edit code. Severity is consumer-controlled via `.design-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
+You are editing in a project that uses the Canvas-to-Code plugin. Apply these seven editor-time reminders **inline** as you write or edit code. Severity is consumer-controlled via `.design-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
 
 ## When to apply
 
 - The repo contains a `.claude-design/` folder (committed design sources).
 - You are editing a file under `app/`, `components/`, `lib/`, or `hooks/`.
-- Or: the user explicitly invokes a `/design-to-code:*` command.
+- Or: the user explicitly invokes a `/canvas-to-code:*` command.
 
 Skip these reminders for non-component code (config files, docs, tests, scripts).
 
