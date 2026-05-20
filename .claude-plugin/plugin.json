@@ -1,6 +1,6 @@
 {
   "name": "canvas-to-code",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Translate canvas designs (HTML + screenshot) into design-system-aligned code through eleven explicit gates",
   "author": {
     "name": "Open Session",

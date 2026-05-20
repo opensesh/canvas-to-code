@@ -2,6 +2,39 @@
 
 All notable changes to the Canvas-to-Code plugin (formerly `design-to-code-bridge`) are documented here. Follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-05-19
+
+### Added
+
+- **Iter folders as first-class sources.** The bridge now accepts iter-shaped subfolders (`<feature>/<subpage>/<tool>/iter-NN-<slug>/`) alongside today's flat `<feature>/review.html` shape. Producer skills like the BOS `paper-design` skill emit iters directly; the iter IS the handoff — no separate "promote" step.
+- **`paper` source type** in the canonical enum (`paper | claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html`). Gate 2 treats `paper` as DS-aligned pass — the consumer's own producer skill has no synthetic-source translation cost.
+- **Gate 0 unified picker** — a single menu in the no-flags `start` flow that lists active features, v2 iter folders (sorted by `source-meta.yaml` mtime, capped at 10), loose materials, and completed features. The user picks by number or pastes an iter path; the bridge auto-fills Gate 0 from `source-meta.yaml`. Two always-on tail options: "Import from external source" (today's conversational intake) and "Start blank".
+- **Gate 1 iter snapshot.** When `sourceShape === "iter"`, Gate 1 verifies the seven v2 required fields, then copies `source-meta.yaml` + `jsx/*.tsx` + `screenshots/*` into `.design-to-code/state/<feature>/source-snapshot/`. The iter folder can evolve or be deleted afterward without breaking the in-flight bridge.
+- **Gate 5a extractor short-circuit.** When `sourceShape === "iter"`, the extractor skips HTML parsing entirely and copies the snapshot's pre-extracted JSX directly to `/tmp/<feature>-template.tsx`. This eliminates the lossiest gate in the pipeline (HTML→JSX extraction) for any consumer using a producer skill.
+- **`status.json` source-shape fields** — `subpage` (string, nullable), `sourceShape` (`"iter" | "flat"`, default `"flat"`), `sourceIterPath` (string, nullable). All three are additive and back-fill on first read of pre-0.4.0 status files.
+- **Test coverage** for the iter pipeline: `tests/12-iter-source-meta-v2.test.mjs`, `tests/13-gate-1-iter-snapshot.test.mjs`, `tests/14-gate-5a-iter-shortcircuit.test.mjs`, `tests/15-gate-0-picker.test.mjs`. Plus a `tests/fixtures/iter-paper-v2/` fixture modeling the canonical BOS-3.0 paper-design output.
+
+### Changed
+
+- **`scripts/discriminator.mjs`** now returns `{ type, shape, signal }`. `shape: "iter"` when a directory contains `source-meta.yaml` with `metaVersion: 2`; `shape: "flat"` otherwise. The exported helper `parseSimpleYaml` reads top-level scalar fields.
+- **`agents/canvas-to-code-pm.md`** dispatch tree expanded: guided discovery scan picks up v2 iter folders; Gate 0 has an iter auto-fill branch; Gate 1 branches on `sourceShape`; Gate 2 case list adds `paper`.
+- **`agents/canvas-to-code-extractor.md`** documents the Gate 5a iter short-circuit at the top, with frontmatter granting `Write` + `Bash` to copy the snapshot file.
+- **`commands/start.md`** describes the new unified menu in user-facing form.
+- **`commands/assets.md`** surfaces `sourceShape`, iter folder path, and the `source-snapshot/` directory in feature blocks.
+- **`commands/dashboard.md`** single-feature view annotates the Source line with the shape and shows `subpage` when present.
+- **`DESIGN_TO_CODE_RULES.md`** §5 documents the three new status fields plus their backfill; §7 explains that the discriminator now branches on shape before reading signatures.
+
+### Internal
+
+- **Agent + skill filename rename** (deferred from v0.3.0): `agents/design-to-code-*.md` → `agents/canvas-to-code-*.md` and `skills/design-to-code-*.md` → `skills/canvas-to-code-*.md`. All cross-references in commands, templates, scripts, hooks, and tests now point at the new filenames. Tests 01/02/08 assert the canvas-to-code- prefix and that the legacy filenames are gone.
+
+### Notes
+
+- **Flat shape unchanged.** Every consumer using `review.html` + screenshots keeps working without any migration. The two shapes are peers; the bridge knows nothing producer-specific about Paper or any future iter producer — `source: paper` is just an enum value.
+- **No migration script.** Pre-0.4.0 `status.json` files backfill silently on first read: `subpage = null`, `sourceShape = "flat"`, `sourceIterPath = null`.
+- **v1 iters get rejected at Gate 1** with a backfill hint pointing at the consumer's producer skill — never silently coerced.
+- **`--from-iter` flag deferred.** The Gate 0 picker covers the wizard path; a flag-based shortcut would push past the 5-flag cap. Revisit if scripted scaffolding becomes a real need.
+
 ## [0.3.0] — 2026-05-19
 
 ### BREAKING

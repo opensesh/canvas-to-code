@@ -195,12 +195,60 @@ The PM agent **never writes feature code**. It owns the conversation and the gat
 
 ---
 
-## Source compatibility
+## Source shapes
+
+The bridge accepts two source shapes. The Gate 0 picker treats them as peers; pick the one your producer emits.
+
+### Flat shape (any tool)
+
+A feature subfolder under `.claude-design/<feature>/` with:
+
+```
+.claude-design/<feature>/
+  review.html              ← design export (Claude Design, Figma, V0, Lovable, Webflow, generic HTML)
+  screenshots/             ← one or more PNGs
+  source-meta.yaml         ← declares `source:` when auto-detect is ambiguous
+```
+
+The discriminator reads the first 2 KB of `review.html`, returns `{ type, shape: "flat" }`, and the extractor (Gate 5a) parses the HTML into JSX.
+
+### Iter shape (producer-emitted)
+
+A subfolder ending in `iter-NN-<slug>` with a v2-compliant `source-meta.yaml`. The producer skill (e.g. the BOS `paper-design` skill) emits this shape directly — the iter IS the handoff, no manual "promote" step.
+
+```
+.claude-design/<feature>/<subpage>/<tool>/iter-NN-<slug>/
+  source-meta.yaml         ← metaVersion: 2 + the seven required fields
+  notes.md
+  jsx/<page>.tsx           ← pre-extracted JSX
+  screenshots/01-*.png
+```
+
+When you pick an iter at Gate 0, the bridge snapshots `source-meta.yaml`, the JSX, and the screenshots into `.design-to-code/state/<feature>/source-snapshot/` (Gate 1). Gate 5a then short-circuits the HTML extractor and copies the snapshot JSX straight to `/tmp/<feature>-template.tsx` — the lossiest gate in the pipeline becomes a no-op.
+
+#### source-meta v2 schema (the bridge contract)
+
+The canonical spec lives at [`.claude/skills/paper-design/SKILL.md`](https://github.com/open-session/BOS-3.0/blob/feat/frontend-only-rewrite/.claude/skills/paper-design/SKILL.md) in the BOS repo. Seven required fields:
+
+```yaml
+metaVersion: 2
+source: paper          # paper | claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html
+feature: brand-hub     # URL path segment 1
+subpage: colors        # URL path segment 2, or 'home' if URL is the feature index
+targetRoute: /brand-hub/colors
+jsxPath: jsx/brand-hub-colors.tsx       # relative to the iter folder
+primaryScreenshot: screenshots/01-baseline.png
+```
+
+Iters missing `metaVersion: 2` (or with an unsupported version) fail Gate 1 loudly and point at the producer skill for backfill.
+
+### Per-source signatures (flat shape only)
 
 Day-1: Claude Design + screenshot-only. Others land when first encountered.
 
 | Source | Discriminator signature | Decoder | Day-1 |
 |---|---|---|---|
+| Paper | (iter-only — no flat signature) | Iter short-circuit at Gate 5a | ✅ |
 | Claude Design | `__bundler/template` script tag with embedded char-dictionary | Bundle decode → flat JSX | ✅ |
 | Figma Export-to-Code | `data-figma-*` attrs OR `figma.com` in `<meta>` | Flatten inline styles → JSX, strip Figma class names | ⏳ |
 | V0 / Lovable | `.tsx`/`.jsx` extension OR `v0.dev`/`lovable.dev` comment | Pass-through, sanitize imports | ⏳ |
@@ -208,7 +256,7 @@ Day-1: Claude Design + screenshot-only. Others land when first encountered.
 | Screenshot-only | No `review.html`, PNGs in `screenshots/` | No decode — extractor returns "visual-reference only" | ✅ |
 | Generic HTML | Default fallback | Treat as V0 case | ✅ |
 
-When auto-detect is ambiguous, `.claude-design/<feature>/source-meta.yaml` declares it.
+When auto-detect is ambiguous on a flat folder, `.claude-design/<feature>/source-meta.yaml` declares `source:` explicitly.
 
 ---
 
@@ -225,6 +273,8 @@ The gates, the PM flow, and the dashboard work unchanged. You don't fork; you co
 ---
 
 ## Status
+
+**v0.4.0 — Iter folders as first-class sources.** The Gate 0 picker scans `.claude-design/` for v2-compliant `iter-*` folders alongside active features and loose materials, then presents one unified menu. Selecting an iter auto-fills Gate 0 from `source-meta.yaml` (feature, subpage, route, source). Gate 1 snapshots the iter; Gate 5a short-circuits the HTML extractor and copies the iter's pre-extracted JSX directly. `status.json` gains `subpage`, `sourceShape`, and `sourceIterPath` — additive only; pre-0.4.0 features backfill silently. Adds `paper` to the source enum (DS-aligned pass at Gate 2). Internal agent rename `design-to-code-*` → `canvas-to-code-*` completes (deferred from v0.3.0). Flat shape still works unchanged.
 
 **v0.3.0 — Canvas-to-Code.** Rebranded from `design-to-code-bridge`. Slash-command surface collapsed from 10 commands to 3 (`start`, `dashboard`, `assets`), with a 5-flag set (`--feature`, `--gate`, `--prep`, `--pr`, `--json`). `start` now opens with a guided discovery scan of `.claude-design/` so the first thing the user sees is what already exists. `status.json` gains lifecycle timestamps (created_at, last_touched_at, completed_at + per-slice merged_at and pr_number); the PM backfills these silently on pre-0.3.0 files. **Breaking change** — see the Upgrading section above.
 

@@ -167,7 +167,20 @@ Per-slice timestamps inside `slices[]`:
 - `slices[i].merged_at` (ISO, nullable) — written when the slice PR merges.
 - `slices[i].pr_number` (integer, nullable) — populated from `gh pr view` when the PR is opened.
 
-**Backfill rule.** When the PM reads a pre-0.3.0 `status.json` that lacks any of these fields, it backfills them silently from `gateLog` (e.g. `created_at = gateLog[0].atISO`) before its first write. No standalone migration script. The dashboard renders `—` for any value that is still absent (e.g. an in-flight feature has no `completed_at` yet).
+#### Source-shape fields (v0.4.0+)
+
+Three additional fields disambiguate iter-shape vs flat-shape ingestion:
+
+- `subpage` (string, nullable) — the URL's second path segment (e.g. `colors` for `/brand-hub/colors`), or `null` for feature-index pages and flat-shape features.
+- `sourceShape` (`"iter" | "flat"`, default `"flat"`) — whether the source is a v2 iter folder or a flat `review.html` + screenshots.
+- `sourceIterPath` (string, nullable) — absolute or repo-root-relative path of the iter folder when `sourceShape === "iter"`. The PM snapshots the iter into `.design-to-code/state/<feature>/source-snapshot/` at Gate 1 and reads from the snapshot for the rest of the run, so this field is for traceability rather than runtime use.
+
+**Backfill rule.** When the PM reads a pre-0.4.0 `status.json` that lacks any of these fields, it backfills them silently before its first write:
+
+- Timestamps: `created_at = gateLog[0].atISO`, `last_touched_at = gateLog[-1].atISO`, `completed_at = gateLog[-1].atISO` (only when `phase === "done"`).
+- Shape: `subpage = null`, `sourceShape = "flat"`, `sourceIterPath = null`.
+
+No standalone migration script. The dashboard renders `—` for any value that is still absent (e.g. an in-flight feature has no `completed_at` yet).
 
 ### 6. Idempotency
 
@@ -175,19 +188,23 @@ Re-running `/canvas-to-code:start` mid-flow MUST resume from the last-completed 
 
 ### 7. Source-Type Discriminator
 
-The extractor runs `scripts/discriminator.mjs` against the first 2 KB of `review.html`. Signatures:
+`scripts/discriminator.mjs` returns `{ type, shape, signal }` for any directory. It branches on **shape first**:
 
-| Source | Signature |
+- **Iter shape** — directory contains `source-meta.yaml` with `metaVersion: 2`. The `source:` field is authoritative (no HTML sniffing). Returns `shape: "iter"`.
+- **Flat shape** — anything else. Returns `shape: "flat"` and runs the signature table below against the first 2 KB of `review.html`.
+
+| Source | Signature (flat-shape only) |
 |---|---|
+| `paper` | (no flat-shape signature — paper is iter-only) |
 | `claude-design` | `<script type="__bundler/template">` present |
 | `figma` | `data-figma-*` attributes OR `figma.com` in `<meta>` |
 | `v0` | filename ends `.tsx`/`.jsx` OR `v0.dev` comment in first 2 KB |
 | `lovable` | `lovable.dev` comment |
 | `webflow` | `<link href=".webflow.css">` OR `data-wf-*` |
-| `screenshot-only` | no `review.html` exists in `.claude-design/<feature>/` |
+| `screenshot-only` | no `review.html` exists in the directory |
 | `generic-html` | default fallback |
 
-When ambiguous, `.claude-design/<feature>/source-meta.yaml` declares `source:` explicitly.
+When ambiguous on a flat-shape folder, `.claude-design/<feature>/source-meta.yaml` declares `source:` explicitly.
 
 ### 8. Branch & Slice Conventions
 
