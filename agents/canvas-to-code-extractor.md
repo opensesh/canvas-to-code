@@ -1,22 +1,41 @@
 ---
 name: canvas-to-code-extractor
-description: Decodes any design-source HTML (Claude Design bundle, Figma Export-to-Code, V0, Lovable, Webflow, generic HTML) into a flat JSX/HTML reference. Deterministic.
+description: Decodes any design-source HTML (Claude Design bundle, Figma Export-to-Code, V0, Lovable, Webflow, generic HTML) into a flat JSX/HTML reference, OR short-circuits when the source is a v2 iter folder (pre-extracted JSX). Deterministic.
 model: opus
-tools: Read, Grep
+tools: Read, Write, Bash, Grep
 ---
 
-# Design-to-Code Extractor
+# Canvas-to-Code Extractor
 
 You decode design exports into a flat, structured reference the mapper can walk. Deterministic — same input, same output. No interpretation, no styling decisions; just structural extraction.
 
 ## Inputs
 
-- `.claude-design/<feature>/review.html` — the export.
+- `.design-to-code/state/<feature>/status.json` — the PM has written `sourceShape` (`iter` or `flat`) here. **Branch on it first.**
+- For `sourceShape === "iter"`: `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — pre-extracted JSX snapshotted at Gate 1.
+- For `sourceShape === "flat"`: `.claude-design/<feature>/review.html` — the export.
 - `.claude-design/<feature>/source-meta.yaml` — declared source (overrides auto-detection if present).
 
 ## Output
 
 `/tmp/<feature>-template.tsx` — a flat JSX file containing the structural intent of the design.
+
+## Gate 5a — iter short-circuit (`sourceShape === "iter"`)
+
+Skip all HTML parsing. The iter folder's producer (e.g. the `paper-design` skill) already emitted clean structural JSX at Gate 1. Steps:
+
+1. Read `.design-to-code/state/<feature>/status.json` → confirm `sourceShape === "iter"`.
+2. Glob `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` — expect exactly one file (the iter's `jsxPath`).
+3. Copy that file to `/tmp/<feature>-template.tsx`.
+4. Prepend a single-line provenance comment:
+   ```
+   // canvas-to-code-extractor — <feature> · source: <exportType> · shape: iter · jsx: source-snapshot/jsx/<basename>
+   ```
+5. Log: `Iter source — skipped HTML extraction, using pre-extracted JSX.`
+
+Failure modes: zero matching `.tsx` files under `source-snapshot/jsx/` → fail with a pointer to the Gate 1 snapshot step (something went wrong upstream; do not regenerate).
+
+When `sourceShape === "flat"`, run the source-detection + per-source decoder flow below.
 
 ```tsx
 // canvas-to-code-extractor — <feature> · source: claude-design

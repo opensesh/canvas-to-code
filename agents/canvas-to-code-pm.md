@@ -44,18 +44,59 @@ On every spawn, parse the flags passed to `/canvas-to-code:start` and route as f
 
 ## Guided discovery (default path, no flags)
 
-Before doing anything, scan `.claude-design/` and present a summary so the user can choose what to do. Never silently auto-advance past Gate 0 without showing this summary.
+Before doing anything, scan `.claude-design/` and present a single unified menu so the user picks where the source comes from. Never silently auto-advance past Gate 0 without showing this menu.
 
-1. **Scan `.claude-design/`.** For each immediate subdirectory:
-   - Active feature: `.design-to-code/state/<name>/status.json` exists and `phase ≠ "done"`.
-   - Completed feature: `phase = "done"`.
-   - Loose materials: `review.html`, `screenshots/`, or `source-meta.yaml` present but no `status.json`.
-2. **Print a summary** of what's there (active features with current gate, completed features, loose materials).
-3. **Ask the user** which to do:
-   - One or more active features → "Resume `<feature>` (Gate N), or start fresh?"
-   - Loose materials only → "I see materials at `.claude-design/<subfolder>/`. Import them into a new feature, or start fresh with new materials?"
-   - Empty → "No existing assets. Let's gather materials." Proceed to Gate 0 intake.
-4. **Route** based on the choice. Resuming a feature jumps to its next pending gate; importing loose materials triggers Gate 0 intake using the discovered subfolder name as the default slug.
+### 1. Scan
+
+Walk `.claude-design/` to depth 5. Categorize every subdirectory you find:
+
+- **Active feature** — `.design-to-code/state/<name>/status.json` exists with `phase ≠ "done"`.
+- **Completed feature** — `phase = "done"`.
+- **Iter folder (v2)** — directory whose name matches `iter-*` and contains a `source-meta.yaml` with `metaVersion: 2`. Read its `source`, `feature`, `subpage`, `targetRoute`, `jsxPath`, `primaryScreenshot`. Skip if any of those required fields are missing — surface as bridge-pending in the menu but do not allow it to be picked.
+- **Loose materials** — subfolder with `review.html`, `screenshots/`, or `source-meta.yaml` but no `status.json` and not an iter folder.
+
+Sort iter folders by source-meta-file `mtime` descending. Cap at 10.
+
+### 2. Print the unified menu
+
+```
+Welcome to canvas-to-code. Scanning .claude-design/…
+
+Found:
+  Active features
+    1. <feature>      (Gate N in progress, last touched <relative>)
+  Iter folders (v2)
+    2. <feature>/<subpage>  <iter-name>  (<source>, <mtime relative>)
+    …
+  Loose materials
+    N. <subfolder>/  (review.html, no status.json)
+  Completed
+    N. <feature>  (done, finished <date>)
+
+  N+1. Import from external source (Claude Design, Figma, V0, Lovable, Webflow)
+  N+2. Start blank — I'll walk you through capturing materials
+
+Reply with a number, or paste a path to an iter folder.
+```
+
+Skip empty sections. If every category is empty, fall straight through to the source-type-first menu (option N+1 above expanded with the seven external source choices).
+
+### 3. Route the user's choice
+
+- **Active feature** → resume; jump to its next pending gate.
+- **Iter folder** → start Gate 0 with auto-fill from the iter's source-meta:
+  - `feature` ← `source-meta.feature`
+  - `subpage` ← `source-meta.subpage`
+  - `targetRoute` ← `source-meta.targetRoute`
+  - `exportType` ← `source-meta.source` (one of: paper, claude-design, figma, v0, lovable, webflow, screenshot-only, generic-html)
+  - `sourceShape: "iter"`
+  - `sourceIterPath` ← absolute path of the iter folder
+  - `designSourcePath` ← absolute path of the iter folder
+- **Pasted iter path** → resolve to absolute, verify it's a v2 iter (same field check as scan), then apply the same auto-fill.
+- **Loose materials** → Gate 0 intake using the discovered subfolder name as the default slug. `sourceShape: "flat"`.
+- **External / blank** → today's conversational Gate 0 intake. `sourceShape: "flat"`.
+
+The PM never silently advances past this menu — the user must choose before any gate runs.
 
 ## Read at spawn
 
@@ -67,13 +108,16 @@ Every invocation, in this order:
 
 If `config.yaml` is missing, emit a friendly setup error pointing at `templates/config.example.yaml` and exit. Don't try to operate without it.
 
-### Backfill rule (pre-0.3.0 status.json)
+### Backfill rule (pre-0.4.0 status.json)
 
-When reading a `status.json` written by a pre-0.3.0 PM, the timestamp fields added in 0.3.0 may be absent. Backfill them silently on first read so the dashboard renders cleanly:
+When reading a `status.json` written by an older PM, fields may be absent. Backfill them silently on first read so the dashboard renders cleanly:
 
 - `created_at` absent → write `created_at = gateLog[0].atISO`.
 - `last_touched_at` absent → write `last_touched_at = gateLog[-1].atISO`.
 - `completed_at` absent and `phase === "done"` → write `completed_at = gateLog[-1].atISO`.
+- `subpage` absent → write `subpage = null`.
+- `sourceShape` absent → write `sourceShape = "flat"` (every pre-0.4.0 feature was flat).
+- `sourceIterPath` absent → write `sourceIterPath = null`.
 
 Every subsequent write updates `last_touched_at` to the current ISO timestamp. No standalone migration script — the backfill IS the migration.
 
@@ -81,27 +125,32 @@ Every subsequent write updates `last_touched_at` to the current ISO timestamp. N
 
 You walk these in strict order. Append a `gateLog` entry after every transition with `{gate, result, atISO, note}` where `result ∈ pass | warn | fail | pending`.
 
-### Gate 0 — Intake (conversational)
+### Gate 0 — Intake (conversational, or auto-filled from iter)
 
-Five questions:
+Five questions when the menu choice is "external" or "blank":
 
 1. **What are you building?** Free text → feature name + slug (sanitize to lowercase + hyphens, e.g. `Brand Hub Redesign` → `brand-hub-redesign`).
 2. **New page or existing?** → `isExistingRoute: true | false`.
 3. **What route is it?** → `targetRoute`, e.g. `/brand-hub`.
 4. **HTML export + screenshot — paths?** → If user has them now, copy into `.claude-design/<feature>/` (move `review.html`, move `screenshots/*`). If "later", save state and exit with a resume hint.
-5. **Design tool?** — `claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html` → `exportType`.
+5. **Design tool?** — `paper | claude-design | figma | v0 | lovable | webflow | screenshot-only | generic-html` → `exportType`.
+
+When the menu choice was **an iter folder**, all five answers are auto-filled from `source-meta.yaml` (see "Route the user's choice" above). Confirm the auto-fill back to the user in one block before writing `status.json` so they can override any field.
 
 Write `status.json`:
 
 ```json
 {
-  "feature": "brand-hub-hifi",
+  "feature": "brain",
   "phase": "intake",
-  "featureBranch": "brand-hub-hifi",
-  "targetRoute": "/brand-hub",
+  "featureBranch": "brain",
+  "targetRoute": "/brain",
   "isExistingRoute": true,
-  "exportType": "claude-design",
-  "designSourcePath": ".claude-design/brand-hub-hifi/",
+  "exportType": "paper",
+  "subpage": "home",
+  "sourceShape": "iter",
+  "sourceIterPath": ".claude-design/brain/home/paper/iter-01-baseline/",
+  "designSourcePath": ".claude-design/brain/home/paper/iter-01-baseline/",
   "specDocPath": null,
   "dsAlignment": "unknown",
   "warnings": [],
@@ -114,11 +163,30 @@ Write `status.json`:
 }
 ```
 
+For flat-shape features (external source or blank), `subpage: null`, `sourceShape: "flat"`, `sourceIterPath: null`. All three fields are additive and default to `null` for pre-0.4.0 features — no migration required.
+
 After Gate 0 passes, **auto-advance to Gate 1**.
 
 ### Gate 1 — Materials present
 
-Check:
+Branch by `sourceShape`.
+
+**`sourceShape === "iter"`** — the iter folder IS the handoff. The iter folder may evolve or be deleted after this gate, so snapshot it into the state dir before Gate 5 runs.
+
+1. Re-read `<sourceIterPath>/source-meta.yaml`. Verify every v2 required field is present and non-empty: `metaVersion: 2`, `source`, `feature`, `subpage`, `targetRoute`, `jsxPath`, `primaryScreenshot`.
+2. Verify `<sourceIterPath>/<jsxPath>` exists and is non-empty.
+3. Verify `<sourceIterPath>/<primaryScreenshot>` exists.
+4. Snapshot into `.design-to-code/state/<feature>/source-snapshot/`:
+   - Copy `source-meta.yaml` → `source-snapshot/source-meta.yaml`.
+   - Copy `<jsxPath>` → `source-snapshot/jsx/<basename>.tsx` (preserve filename).
+   - Copy every file under `<sourceIterPath>/screenshots/*` → `source-snapshot/screenshots/`.
+5. Record `result: pass` with a note quoting the snapshotted artifact count.
+
+**Failure modes for iter shape:**
+- `metaVersion` absent or ≠ `2` → fail with a backfill hint pointing at the consumer's producer skill (`/paper-design inspect` for the BOS Paper skill, generic backfill instructions otherwise).
+- `jsxPath` or `primaryScreenshot` resolves to a missing file → fail and surface the missing path verbatim.
+
+**`sourceShape === "flat"`** (today's behavior) —
 
 - `.claude-design/<feature>/review.html` exists AND is non-empty (or `exportType === 'screenshot-only'`).
 - `.claude-design/<feature>/screenshots/` contains ≥1 `.png`.
@@ -130,6 +198,7 @@ Check:
 
 Check `source-meta.yaml.source` and `sourceProject`. Cases:
 
+- `paper` → pass (the consumer's own producer skill — no synthetic-source translation cost).
 - `claude-design` from a non-Open-Session team project → warn.
 - `figma` from a file not using the consumer's vendor primitives → warn.
 - `screenshot-only` → warn (translation cost is higher).
@@ -155,7 +224,8 @@ Save into `status.json.scope`. Refuse to enter Gate 5 with unresolved questions.
 
 ### Gate 5 — Component mapping (keystone)
 
-Spawn `@canvas-to-code-extractor.md` first → flat JSX at `/tmp/<feature>-template.tsx`.
+Spawn `@canvas-to-code-extractor.md` first → flat JSX at `/tmp/<feature>-template.tsx`. When `sourceShape === "iter"`, the extractor short-circuits and copies pre-extracted JSX from `.design-to-code/state/<feature>/source-snapshot/jsx/*.tsx` instead of parsing HTML.
+
 Then spawn `@canvas-to-code-mapper.md` with the JSX, screenshots, consumer's `components/` tree, and `token-map.yaml`.
 
 Mapper produces `componentMap` (see schema in DESIGN_TO_CODE_RULES.md and the status.json example). Surface explicitly:
