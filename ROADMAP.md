@@ -16,10 +16,10 @@ Canvas-to-code is currently **dogfooded inside [open-session/BOS-3.0](https://gi
 **Today's recommendation:**
 
 - ✅ **Use it** if your codebase is structurally similar to BOS (Next.js 16, vendor primitives in `components/base/`, design exports flowing through `.claude-design/`). Several gates (mapper, guardrails) are tuned to that shape.
-- ⚠️ **Wait** if you're a different stack or want a fully turnkey adoption experience. The "producer-config" layer that lets non-BOS consumers customize chrome, brand colors, and dev URLs isn't shipped yet — see [Phase 1](#phase-1--soon-post-v040-stabilization) below.
+- ⚠️ **Wait** if you're a different stack or want a fully turnkey adoption experience. The "producer-config" layer that lets non-BOS consumers customize the app shell, brand colors, and dev URLs isn't shipped yet — see [Phase 1](#phase-1--soon-post-v040-stabilization) below.
 - 🚧 **Talk to us** if you want to be a design partner. A second consumer is exactly what we need to validate the extraction work. Open an issue or reach out: hello@opensession.co.
 
-The eventual goal: **public template**. Anyone can `/plugin install canvas-to-code` plus a single `/canvas-to-code:init` invocation that scaffolds producer config from their repo's existing chrome. We're not there yet; we will be.
+The eventual goal: **public template**. Anyone can `/plugin install canvas-to-code` plus a single `/canvas-to-code:init` invocation that scaffolds producer config from their repo's existing app shell. We're not there yet; we will be.
 
 **Why we're not there yet:** premature extraction is the most common way template plugins ossify into "the original author's taste" before they meet a second user. We'd rather prove the patterns in one full BOS cycle (gates, slices, dashboard, multi-source ingestion) and extract once we have signal that the patterns generalize, than ship a half-generalized template and bake BOS's accidents into the contract.
 
@@ -36,7 +36,7 @@ What ships with the plugin:
 
 What lives in BOS (not the plugin) today:
 
-- **`paper-design` skill** — Paper.Design + Chrome MCP capture flow that emits iter folders. Encodes BOS's chrome (rail nav, brand colors, dev URL, artboard naming) directly in `shell-v1.html`.
+- **`paper-design` skill** — Paper.Design + Chrome MCP capture flow that emits iter folders. Encodes BOS's app shell (rail nav, brand colors, dev URL, artboard naming) directly in `shell-v1.html`.
 - **`design-handoff` skill** — mediator between `paper-design` and `/canvas-to-code:start`. Carries the four-question "is this iter ready?" decision rules.
 - **`.claude-design/<feature>/<subpage>/paper/iter-*/` folders** — the actual exploration material.
 
@@ -112,7 +112,7 @@ canvas-to-code/
 **BOS-side after the move:**
 
 ```
-BOS/.canvas-to-code/producer-config.yaml   # BOS chrome lives here
+BOS/.canvas-to-code/producer-config.yaml   # BOS app shell config lives here
 BOS/.canvas-to-code/templates/
   paper-shell.html                          # BOS-specific override
 ```
@@ -154,10 +154,10 @@ Working name: `canvas-to-code-producer-init`, invoked via `/canvas-to-code:init 
 
 **What it does:**
 
-1. Reads the consumer's `app/` or equivalent route tree to detect the existing chrome (rail nav structure, page-shell layout).
+1. Reads the consumer's `app/` or equivalent route tree to detect the existing app shell (rail nav structure, page-shell layout).
 2. Reads the consumer's design-token CSS or Tailwind config to extract brand colors.
 3. Generates a starter `producer-config.yaml` with detected values plus TODO markers where it couldn't infer.
-4. Captures the consumer's current chrome into a starter `shell-default.html` (Paper-MCP optional; falls back to a "manual override" template).
+4. Captures the consumer's current app shell into a starter `shell-default.html` (Paper-MCP optional; falls back to a "manual override" template).
 5. Prints a "what to fill in by hand" diff so the adopter knows what's left.
 
 This is the skill that makes the second-consumer case go from a one-day setup to a one-command setup. It's the producer-skill analogue of `/canvas-to-code:start`'s Gate 0 picker.

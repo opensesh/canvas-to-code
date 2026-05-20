@@ -26,7 +26,7 @@
     { "gate": 7, "result": "pass", "atISO": "2026-06-04T16:15:00Z", "note": "slice 3" }
   ],
   "slices": [
-    { "n": 1, "title": "scaffold + chrome",     "slug": "scaffold", "pr": 341, "merged": true,  "merged_at": "2026-06-04T14:45:00Z", "loc": 220, "commits": ["e8c4f291"] },
+    { "n": 1, "title": "scaffold + header",     "slug": "scaffold", "pr": 341, "merged": true,  "merged_at": "2026-06-04T14:45:00Z", "loc": 220, "commits": ["e8c4f291"] },
     { "n": 2, "title": "cards (mock data)",     "slug": "cards",    "pr": 342, "merged": true,  "merged_at": "2026-06-04T15:30:00Z", "loc": 410, "commits": ["b7a3d8e2"] },
     { "n": 3, "title": "wire real spaces data", "slug": "wire",     "pr": 343, "merged": true,  "merged_at": "2026-06-04T16:15:00Z", "loc": 350, "commits": ["f9c2e1ab"] },
     { "n": 4, "title": "members + permissions", "slug": "secondary","pr": null,"merged": false, "loc": 0,   "commits": [] },

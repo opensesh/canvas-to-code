@@ -32,13 +32,13 @@ The mapper's job is to push every visual unit as far up this stack as possible �
 Default phase rhythm for a redesign of a working page:
 
 ```
-scaffold → chrome → cards → wire data → secondary surface → swap
+scaffold → header → cards → wire data → secondary surface → swap
    PR 1     PR 2    PR 3      PR 4          PR 5            PR 6
   150 LOC  250 LOC 450 LOC   250 LOC       550 LOC         150 LOC
 ```
 
 - **scaffold** — parallel route, the design-source folder, placeholder pages.
-- **chrome** — top nav, overview block, layout shell.
+- **header** — page header & nav, overview block, layout shell.
 - **cards** — the main grid / list with **mock data**.
 - **wire data** — swap mocks for real hooks.
 - **secondary surface** — secondary pages (e.g. Version History).

@@ -90,8 +90,8 @@ If `isExistingRoute === false`:
 
 ## Nearby surfaces (for pattern reference)
 
-- `/brand-hub` uses `BrandHubLayout` → consider whether redesign shares chrome.
-- `/spaces` and `/brand` use the same dashboard chrome.
+- `/brand-hub` uses `BrandHubLayout` → consider whether redesign shares the layout shell.
+- `/spaces` and `/brand` use the same dashboard shell.
 
 ## No behaviors to port
 ```

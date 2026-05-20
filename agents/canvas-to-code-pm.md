@@ -219,7 +219,7 @@ Walk the engineer through:
 - Routes dropped (with explicit "no bookmarks to protect" confirmation per dropped route).
 - Behaviors to port across the swap (wizards, modals, redirects from the audit).
 - Sub-routes touched vs untouched.
-- Header / nav chrome: replaced or retained?
+- Page header & nav: replaced or retained?
 
 Save into `status.json.scope`. Refuse to enter Gate 5 with unresolved questions.
 
@@ -254,12 +254,12 @@ Write the returned object into `status.json.componentMap.dataBindings`. Invarian
 
 ### Gate 7 — Slice plan
 
-Use `config.yaml.default_phase_rhythm` (default: `[scaffold, chrome, cards, wire, secondary, swap]`). Propose a slice plan:
+Use `config.yaml.default_phase_rhythm` (default: `[scaffold, header, cards, wire, secondary, swap]`). Propose a slice plan:
 
 ```
 Slice 1 (~150 LOC): <feature>-pr-1-scaffold
   Files: app/(dashboard)/<feature>-hifi/page.tsx, .claude-design/<feature>/, …
-Slice 2 (~250 LOC): <feature>-pr-2-chrome
+Slice 2 (~250 LOC): <feature>-pr-2-header
 …
 ```
 

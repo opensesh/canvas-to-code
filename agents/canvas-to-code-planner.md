@@ -73,7 +73,7 @@ Lift from status.json.scope and audit.md.>
 
 ## PR slicing (<N> PRs into feature branch `<feature>`)
 <Each slice: ~LOC budget, title, files, verify steps. Default rhythm:
-scaffold → chrome → cards → wire data → secondary surface → swap.>
+scaffold → header → cards → wire data → secondary surface → swap.>
 
 ### PR 1 — Scaffold + `.claude-design` convention
 **~150 LOC** · `<feature>: scaffold parallel route + .claude-design convention`

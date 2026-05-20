@@ -10,7 +10,7 @@ slice_loc_budget: 550
 slice_branch_pattern: "{feature}-pr-{n}-{slug}"
 
 # Default phase rhythm. Mapper proposes slices matching this rhythm; engineer can override per-feature.
-default_phase_rhythm: [scaffold, chrome, cards, wire, secondary, swap]
+default_phase_rhythm: [scaffold, header, cards, wire, secondary, swap]
 
 # Per-gate severity. `error` blocks; `warn` records and advances; `pending` waits for human.
 gate_severities:

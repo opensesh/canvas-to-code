@@ -102,7 +102,7 @@
       "notes": "Stats counts need a mock until an analytics service ships"
     },
     {
-      "unitLabel": "Version History page chrome",
+      "unitLabel": "Version History page header",
       "targetPath": "app/(dashboard)/brand-hub-hifi/version-history/page.tsx",
       "dataSource": "mock",
       "backendService": null,

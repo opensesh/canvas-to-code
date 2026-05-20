@@ -78,7 +78,7 @@ test('markSliceMerged updates the matching slice', () => {
   let s = initIntake({ feature: 'x', targetRoute: '/x', isExistingRoute: false, exportType: 'figma' });
   s.slices = [
     { n: 1, title: 'scaffold', merged: false },
-    { n: 2, title: 'chrome',   merged: false },
+    { n: 2, title: 'header',   merged: false },
   ];
   s = markSliceMerged(s, 1, 314);
   assert.equal(s.slices[0].merged, true);

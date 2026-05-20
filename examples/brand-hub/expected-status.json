@@ -33,7 +33,7 @@
   ],
   "slices": [
     { "n": 1, "title": "scaffold + .claude-design convention",         "slug": "scaffold",       "pr": 314, "merged": true, "merged_at": "2026-05-12T19:01:16Z", "loc": 150, "commits": ["92c490df"] },
-    { "n": 2, "title": "3-tab nav + collapsible overview block",       "slug": "chrome",         "pr": 315, "merged": true, "merged_at": "2026-05-12T19:07:22Z", "loc": 250, "commits": ["6720ade2"] },
+    { "n": 2, "title": "3-tab nav + collapsible overview block",       "slug": "header",         "pr": 315, "merged": true, "merged_at": "2026-05-12T19:07:22Z", "loc": 250, "commits": ["6720ade2"] },
     { "n": 3, "title": "PillarCard + 8-card grid (mock data)",          "slug": "cards",          "pr": 316, "merged": true, "merged_at": "2026-05-12T19:21:00Z", "loc": 450, "commits": ["d3a1b8c2"] },
     { "n": 4, "title": "wire Logo/Colors/Typography/Guidelines",        "slug": "wire",           "pr": 317, "merged": true, "merged_at": "2026-05-12T19:36:00Z", "loc": 250, "commits": ["a7e5f93b"] },
     { "n": 5, "title": "Version History page (mocked seed)",            "slug": "secondary",      "pr": 318, "merged": true, "merged_at": "2026-05-12T19:52:00Z", "loc": 550, "commits": ["b2c8d4e1"] },

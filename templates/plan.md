@@ -8,7 +8,7 @@
 
 - **Source of truth**: `.claude-design/{{feature}}/review.html`. Screenshots in `.claude-design/{{feature}}/screenshots/`.
 - **Routing**: parallel route `{{target_route}}-hifi` for slices 1–{{n-1}}, swap to `{{target_route}}` in slice {{n}}.
-- **Page header**: {{retained as-is | replaced — describe new chrome}}.
+- **Page header & nav**: {{retained as-is | replaced — describe the new header/nav}}.
 - **Git flow**: feature branch `{{feature}}` off main. One PR per slice into the feature branch. Final PR merges feature → main.
 - **No new deps**, Tailwind + Style 2 mapped classes only, no `bg-[var(...)]` literals, no raw hex in JSX.
 - **{{key feature-specific decisions}}**: {{e.g. "Drop /brand-hub/textures and /brand-hub/resources on the swap PR"}}.
