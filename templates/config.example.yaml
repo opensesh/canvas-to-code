@@ -50,6 +50,15 @@ components_dirs:
   custom_shared:  components/custom/shared
   custom_pages:   components/custom/pages
 
+# Tier-import boundaries. Controls how strictly tiers may import from one another.
+# When pages_import_base is false, page / custom-page units must compose custom or ds
+# components — never import base/ primitives directly (base is always wrapped by a
+# custom-shared or ds component). The mapper routes direct page→base usage through a
+# wrapper, and the `pages-import-base` guardrail flags violations in code edits.
+# Default true (permissive — pages may compose base directly).
+tier_boundaries:
+  pages_import_base: true
+
 # Consumer build commands. Used by /canvas-to-code:start --gate 10 and the
 # post-merge hook to verify the feature merged cleanly. Adjust to your stack.
 commands:

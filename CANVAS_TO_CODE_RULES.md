@@ -253,6 +253,9 @@ These are surfaced by the `canvas-to-code-guardrails` skill while editing files 
 5. Tailwind Style 2 mapped classes only (no `bg-[var(--bg-primary)]`).
 6. No array-index keys.
 7. Vendor primitive first — check `components/base/` (or your equivalent) before building custom.
+8. Pages never import `base` (when `config.yaml.tier_boundaries.pages_import_base: false`) — page / custom-page files compose `custom` / `ds`, never `base/` directly. Only `base/`, `ds/`, and `custom/shared/` may import `base/`.
+
+(Rule 9 — source-meta v2 compliance — applies to design sources, not code; see the guardrails skill.)
 
 Severity is consumer-controlled (`config.yaml.guardrail_severity` ∈ `warn | error`).
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// check-guardrails.mjs — detect the 7 guardrail violations in a diff string.
+// check-guardrails.mjs — detect the 8 guardrail violations in a diff string.
 //
 // Used by:
 //   - hooks/pre-commit-guardrails.sh (passes the staged diff via stdin)
@@ -57,6 +57,15 @@ const RULES = [
     // Heuristic only — flagged when a +line declares a known-primitive name as a function.
     pattern: /^\+\s*export\s+function\s+(Button|Tabs|Tab|TabPanel|Modal|Dialog|Avatar|Badge|Tooltip)\s*\(/,
   },
+  {
+    name: 'pages-import-base',
+    description: 'page / custom-page files must not import base/ directly — compose custom/ds instead',
+    // Path-scoped: only fires in files OUTSIDE the wrapper layers (base/ ds/ custom/shared/).
+    // Detected via scanBaseImports (needs file-path context), not a line-level regex.
+    // Pairs with config `tier_boundaries.pages_import_base`; consumers that allow direct
+    // page→base imports silence it via `guardrail_overrides: { pages-import-base: off }`.
+    pattern: null, // detected via scanBaseImports
+  },
 ];
 
 /**
@@ -80,8 +89,41 @@ export function checkGuardrails(diff) {
     }
     // devProps name-match check (file-level heuristic)
     findings.push(...checkDevPropsMatch(file));
+    // pages-import-base check (path-scoped — needs file context)
+    findings.push(...scanBaseImports(file));
   }
 
+  return findings;
+}
+
+/**
+ * Is this file part of a wrapper layer that is allowed to import base/ directly?
+ * The wrapper layers are base/ itself, ds/, and custom/shared/ (custom-shared).
+ * Everything else — app/, custom/pages/ (custom-page), feature/page code — must not.
+ * Matches both the default `components/...` layout and prefixed layouts like
+ * BOS's `shared/components/base|ds|custom/shared`.
+ */
+function isWrapperLayer(path) {
+  return (
+    /(^|\/)base\//.test(path) ||
+    /(^|\/)ds\//.test(path) ||
+    /custom\/shared\//.test(path)
+  );
+}
+
+/**
+ * Flag added import lines that pull from a `components/base/` path when the
+ * containing file is NOT a wrapper layer (i.e. it's a page / custom-page / app file).
+ */
+function scanBaseImports(file) {
+  const findings = [];
+  if (isWrapperLayer(file.path)) return findings;
+  const importBaseRe = /(?:\bfrom\s+|\bimport\s*\(?\s*)['"][^'"]*components\/base\//;
+  for (const { lineNo, content } of file.addedLines) {
+    if (importBaseRe.test(content)) {
+      findings.push({ rule: 'pages-import-base', file: file.path, line: lineNo, content: content.trim() });
+    }
+  }
   return findings;
 }
 
