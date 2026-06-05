@@ -5,14 +5,14 @@ description: Editor-time lint reminders for projects using Canvas-to-Code. Auto-
 
 # Canvas-to-Code Guardrails
 
-You are editing in a project that uses the Canvas-to-Code plugin. Apply these eight reminders **inline** as you write or edit code (rules 1–7) or design sources (rule 8). Severity is consumer-controlled via `.canvas-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
+You are editing in a project that uses the Canvas-to-Code plugin. Apply these nine reminders **inline** as you write or edit code (rules 1–8) or design sources (rule 9). Severity is consumer-controlled via `.canvas-to-code/config.yaml.guardrail_severity` (default `warn`) and `guardrail_overrides`.
 
 ## When to apply
 
-- **Rules 1–7 (code edits):** the repo contains a `.claude-design/` folder AND you are editing a file under `app/`, `components/`, `lib/`, or `hooks/`. Or the user explicitly invokes a `/canvas-to-code:*` command. Skip for non-component code (config files, docs, tests, scripts).
-- **Rule 8 (source-meta compliance):** you are editing a `source-meta.yaml` under `.claude-design/<feature>/[<subpage>/<tool>/iter-*/]`. Fires on producer-emitted iter folders specifically.
+- **Rules 1–8 (code edits):** the repo contains a `.claude-design/` folder AND you are editing a file under `app/`, `components/`, `lib/`, or `hooks/`. Or the user explicitly invokes a `/canvas-to-code:*` command. Skip for non-component code (config files, docs, tests, scripts).
+- **Rule 9 (source-meta compliance):** you are editing a `source-meta.yaml` under `.claude-design/<feature>/[<subpage>/<tool>/iter-*/]`. Fires on producer-emitted iter folders specifically.
 
-## The eight rules
+## The nine rules
 
 ### 1. `devProps` naming exactness
 
@@ -106,7 +106,26 @@ import { Tabs } from '@/components/base/application/tabs/tabs';
 </div>
 ```
 
-### 8. source-meta v2 compliance (iter folders)
+### 8. Pages never import `base` (when enabled)
+
+Gated by `.canvas-to-code/config.yaml.tier_boundaries.pages_import_base` (default `true` = off). When set to
+`false`, page / `custom-page` files compose `custom` / `ds` components — they must not import `base/`
+primitives directly. `base` is always wrapped by a `custom-shared` or `ds` component.
+
+```tsx
+// ✅ — page composes a custom wrapper
+import { PrimaryButton } from '@/shared/components/custom/shared/buttons/button';
+<PrimaryButton>Get started</PrimaryButton>
+
+// ❌ — page reaches straight into base
+import { Button } from '@/shared/components/base/buttons/button';
+<Button>Get started</Button>
+```
+
+Only `base/`, `ds/`, and `custom/shared/` files may import from `base/`. If a needed wrapper doesn't exist,
+create it in `custom/shared/<category>/` and import that from the page.
+
+### 9. source-meta v2 compliance (iter folders)
 
 When editing a `source-meta.yaml` inside an iter folder (`.claude-design/<feature>/<subpage>/<tool>/iter-NN-<slug>/`), the seven v2 fields are non-negotiable.
 
@@ -151,7 +170,7 @@ When you spot a violation, surface it like this in your edit explanation:
 
 > *Note: this introduces `border-2` (guardrail 2). Replacing with `border border-border-secondary`. If this is intentional, the consumer can override per-rule via `.canvas-to-code/config.yaml.guardrail_overrides`.*
 
-Do not silently rewrite the user's intent — flag and correct. If the user pushes back, accept their choice and move on. For rule 8, propose a diff but never auto-edit source-meta.yaml — the producer skill owns that file's content.
+Do not silently rewrite the user's intent — flag and correct. If the user pushes back, accept their choice and move on. For rule 9, propose a diff but never auto-edit source-meta.yaml — the producer skill owns that file's content.
 
 ---
 

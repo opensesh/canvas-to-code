@@ -44,3 +44,29 @@ index 0000000..0000001
 +    </div>
 +  );
 +}
+diff --git a/app/(dashboard)/example/page.tsx b/app/(dashboard)/example/page.tsx
+new file mode 100644
+index 0000000..0000002
+--- /dev/null
++++ b/app/(dashboard)/example/page.tsx
+@@ -0,0 +1,8 @@
++import { devProps } from '@/lib/utils/dev-props';
++import { Button } from '@/shared/components/base/buttons/button';
++
++export default function ExamplePage() {
++  return (
++    <Button {...devProps('ExamplePage')}>Get started</Button>
++  );
++}
+diff --git a/components/custom/shared/buttons/button.tsx b/components/custom/shared/buttons/button.tsx
+new file mode 100644
+index 0000000..0000003
+--- /dev/null
++++ b/components/custom/shared/buttons/button.tsx
+@@ -0,0 +1,7 @@
++import { devProps } from '@/lib/utils/dev-props';
++import { Button as BaseButton } from '@/shared/components/base/buttons/button';
++
++export function PrimaryButton({ children }: { children: React.ReactNode }) {
++  return <BaseButton {...devProps('PrimaryButton')}>{children}</BaseButton>;
++}

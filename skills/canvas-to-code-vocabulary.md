@@ -27,6 +27,12 @@ Five tiers, ordered cheapest → most expensive to introduce.
 
 The mapper's job is to push every visual unit as far up this stack as possible — reusing a `base` primitive is always cheaper than building a `custom-shared`.
 
+**Import direction:** `base ← ds / custom-shared ← custom-page ← page`. By default pages may compose `base`
+directly. When `config.yaml.tier_boundaries.pages_import_base: false` (BOS's stricter model), `base` is
+always wrapped — pages and `custom-page` units compose `custom` / `ds` only, never `base` directly. The
+mapper routes direct page→base usage through a `custom-shared` wrapper, and the `pages-import-base`
+guardrail flags it in code.
+
 ## The slice rhythm
 
 Default phase rhythm for a redesign of a working page:

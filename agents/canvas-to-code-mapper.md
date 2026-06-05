@@ -65,6 +65,24 @@ For every visual unit, classify into exactly one tier. Cheapest first; only esca
 | `custom-page` | `config.yaml.components_dirs.custom_pages` (default `components/custom/pages/<route>/`) | Page-scoped composition. |
 | `net-new` | (no primitive) | Icon gaps, arbitrary Tailwind values, ad-hoc SVG. |
 
+## Tier-import boundary
+
+Read `config.yaml.tier_boundaries.pages_import_base` (default `true`).
+
+- **`true` (permissive, default).** A page / `custom-page` unit may compose a `base` primitive directly.
+  Classify it `base` and move on — nothing special.
+- **`false` (strict — e.g. BOS).** `base` is *always wrapped*. A `base` primitive may only appear as a
+  dependency of a `custom-shared` or `ds` unit — never as a unit composed directly by a page or
+  `custom-page`. When you would otherwise emit a bare `base` unit at page level, instead emit a
+  `custom-shared` **wrapper** unit:
+  - `Glob` `components_dirs.custom_shared` for an existing wrapper around that primitive. Found → tier
+    `custom-shared`, `newOrReused: reused`. Missing → tier `custom-shared`, `newOrReused: new`.
+  - Record the wrapped primitive in `notes` (e.g. `"wraps base/buttons/button"`).
+  - The `base` primitive itself does not get its own page-level row; it's an internal dependency of the wrapper.
+
+This keeps the dependency direction `base ← ds / custom-shared ← custom-page ← page`. The Brand Hub golden
+example runs in the default (permissive) mode, so it still emits direct `base` units.
+
 ## The `newOrReused` invariant
 
 This is the **single most important field you produce**. The dashboard's +/− diff depends on it.

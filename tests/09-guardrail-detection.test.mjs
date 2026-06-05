@@ -23,6 +23,16 @@ test('checkGuardrails returns at least one finding per active rule', () => {
   assert.ok(counts['raw-hex'] >= 1, `raw-hex: ${counts['raw-hex']}`);
   assert.ok(counts['style-1-vars'] >= 1, `style-1-vars: ${counts['style-1-vars']}`);
   assert.ok(counts['array-index-keys'] >= 1, `array-index-keys: ${counts['array-index-keys']}`);
+  assert.ok(counts['pages-import-base'] >= 1, `pages-import-base: ${counts['pages-import-base']}`);
+});
+
+test('pages-import-base fires for a page importing base/ but not for a custom/shared wrapper', () => {
+  const diff = readFileSync(DIFF_PATH, 'utf8');
+  const findings = checkGuardrails(diff);
+  const pib = findings.filter((f) => f.rule === 'pages-import-base');
+  // Only the app/ page importing base/ trips it — the custom/shared/ wrapper is exempt.
+  assert.equal(pib.length, 1, `expected 1 pages-import-base, got ${pib.length}: ${JSON.stringify(pib)}`);
+  assert.match(pib[0].file, /app\/\(dashboard\)\/example\/page\.tsx$/);
 });
 
 test('array-index-keys is the most-frequent violation in the fixture (8 instances)', () => {
