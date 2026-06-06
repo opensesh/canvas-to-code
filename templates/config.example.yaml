@@ -48,6 +48,10 @@ components_dirs:
   base:           components/base
   ds:             components/ds
   custom_shared:  components/custom/shared
+  # custom_pages: the page-scoped tier. The mapper appends /<route>/ to this value
+  # UNLESS it contains a `<route>` token, in which case the route is substituted in
+  # place — so feature-sliced repos can keep page-scoped components inside the
+  # route's own slice, e.g.  custom_pages: features/<route>/components
   custom_pages:   components/custom/pages
 
 # Tier-import boundaries. Controls how strictly tiers may import from one another.

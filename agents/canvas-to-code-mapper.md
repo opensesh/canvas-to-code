@@ -62,8 +62,16 @@ For every visual unit, classify into exactly one tier. Cheapest first; only esca
 | `base` | `config.yaml.components_dirs.base` (default `components/base/`) | Vendor primitive used as-is. |
 | `ds` | `config.yaml.components_dirs.ds` (default `components/ds/`) | Thin wrapper or token mapping over base. |
 | `custom-shared` | `config.yaml.components_dirs.custom_shared` (default `components/custom/shared/`) | Cross-page composition. |
-| `custom-page` | `config.yaml.components_dirs.custom_pages` (default `components/custom/pages/<route>/`) | Page-scoped composition. |
+| `custom-page` | `config.yaml.components_dirs.custom_pages` — see resolution note below (default `components/custom/pages/<route>/`) | Page-scoped composition. |
 | `net-new` | (no primitive) | Icon gaps, arbitrary Tailwind values, ad-hoc SVG. |
+
+**Resolving the `custom-page` path.** Read `config.yaml.components_dirs.custom_pages`:
+- If the value **contains a `<route>` token**, substitute the target route into it. This lets
+  feature-sliced consumers place page-scoped components inside the route's own slice — e.g. BOS sets
+  `custom_pages: features/<route>/components`, so a unit for `/brand-hub` resolves to
+  `features/brand-hub/components/<Comp>.tsx`.
+- Otherwise (no token, the default), **append `/<route>/`** — e.g. `components/custom/pages` →
+  `components/custom/pages/<route>/<Comp>.tsx`.
 
 ## Tier-import boundary
 
