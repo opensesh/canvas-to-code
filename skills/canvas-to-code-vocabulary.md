@@ -22,7 +22,7 @@ Five tiers, ordered cheapest → most expensive to introduce.
 | **base** | `components/base/` | Vendor primitive used as-is (e.g. UUI's `Tabs`, `Button`, `Avatar`). Reusing a base unit is free. |
 | **ds** | `components/ds/` | A thin wrapper, formula spec, or token-mapping over a base. Rare; only when a brand decision can't be expressed in CSS variables alone. |
 | **custom-shared** | `components/custom/shared/<category>/` | Cross-page composition (e.g. `PillarCard` used by Brand Hub + future surfaces). Worth building once; every later feature reuses it. |
-| **custom-page** | `components/custom/pages/<route>/` | Page-scoped composition (e.g. `OverviewBlock` for `/brand-hub` only). Cheap, narrow scope. |
+| **custom-page** | `components/custom/pages/<route>/` (or a `<route>`-templated path like `features/<route>/components/` for feature-sliced repos) | Page-scoped composition (e.g. `OverviewBlock` for `/brand-hub` only). Cheap, narrow scope. |
 | **net-new** | inline or under `custom/shared/branding/provider-icons/` | No existing primitive covers it. Most expensive. Flag for icon-gaps or arbitrary-value Tailwind. |
 
 The mapper's job is to push every visual unit as far up this stack as possible — reusing a `base` primitive is always cheaper than building a `custom-shared`.
