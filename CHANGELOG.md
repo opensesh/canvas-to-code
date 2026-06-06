@@ -2,6 +2,18 @@
 
 All notable changes to the Canvas-to-Code plugin are documented here. Follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-06-06
+
+### Added
+
+- **`/canvas-to-code:update` command.** Pulls the latest plugin into a consumer repo by **git SHA**, not version — fast-forwarding the marketplace clone at `~/.claude/plugins/marketplaces/canvas-to-code-marketplace`. Works around the built-in `/plugin update` no-op that occurs when a release ships without a `version` bump (see #2). Flags: `--check` (dry run) and `--force` (hard reset a diverged cache).
+- **Config-gated tier-import boundary** (#3) — `tier_boundaries.pages_import_base` flag in `templates/config.example.yaml`; new path-scoped `pages-import-base` guardrail in `scripts/check-guardrails.mjs` that flags `base/` imports in page / `custom-page` files while exempting the `base/`, `ds/`, and `custom/shared/` wrapper layers. Mapper routes a direct page→base unit through a `custom-shared` wrapper when the flag is `false`. Default unchanged (permissive).
+- **`<route>`-token `custom_pages` path** (#4) — the mapper substitutes the target route into `components_dirs.custom_pages` when the value contains a `<route>` token (e.g. `features/<route>/components`), otherwise appends `/<route>/` as before. Lets feature-sliced consumers (BOS) keep page-scoped components inside the route's own slice.
+
+### Changed
+
+- **Version discipline enforced.** Folds the previously unversioned #3 and #4 (both shipped on `0.4.0`) into this `0.5.0` release so consumers' update path reliably picks them up.
+
 ## [0.4.0] — 2026-05-19
 
 ### Added

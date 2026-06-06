@@ -88,19 +88,23 @@ The PM agent takes you through Gate 0 and writes everything else.
 
 ### Updating
 
+Run the bundled command from any consumer repo — it updates by git SHA, so it works even when a release didn't bump the version field:
+
+```
+/canvas-to-code:update          # check + update to latest main
+/canvas-to-code:update --check  # dry run: report version/SHA + commits behind
+```
+
+Restart the Claude Code session afterward so the refreshed agents/skills load.
+
+The built-in path still works, but `/plugin update` keys off the `version` field and **silently no-ops** when a release ships without a bump (tracked in [#2](https://github.com/opensesh/canvas-to-code/issues/2)):
+
 ```
 /plugin marketplace update canvas-to-code-marketplace
 /plugin update canvas-to-code
 ```
 
-If your Claude Code build doesn't ship `/plugin update`:
-
-```
-/plugin uninstall canvas-to-code
-/plugin install canvas-to-code@canvas-to-code-marketplace
-```
-
-Every release bumps `.claude-plugin/plugin.json`'s `version` field, enforced by [`version-check.yml`](./.github/workflows/version-check.yml), so both paths reliably pick up new versions.
+Every release bumps `.claude-plugin/plugin.json`'s `version` field, enforced by [`version-check.yml`](./.github/workflows/version-check.yml). `/canvas-to-code:update` doesn't depend on that discipline — it's the reliable path.
 
 ---
 

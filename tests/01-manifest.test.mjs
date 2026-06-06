@@ -26,12 +26,12 @@ test('marketplace.json parses and points at the renamed repo', () => {
   assert.equal(m.plugins[0].source.repo, 'opensesh/canvas-to-code');
 });
 
-test('commands/ exists with 3 files at the flat top level', () => {
+test('commands/ exists with 4 files at the flat top level', () => {
   const cmdDir = join(ROOT, 'commands');
   assert.ok(existsSync(cmdDir), 'commands dir exists');
   const files = readdirSync(cmdDir).filter((f) => f.endsWith('.md'));
-  assert.equal(files.length, 3, `expected 3 commands, got ${files.length}: ${files.join(', ')}`);
-  const expected = ['start', 'dashboard', 'assets'];
+  assert.equal(files.length, 4, `expected 4 commands, got ${files.length}: ${files.join(', ')}`);
+  const expected = ['start', 'dashboard', 'assets', 'update'];
   for (const name of expected) {
     assert.ok(files.includes(`${name}.md`), `missing command: ${name}.md`);
   }
