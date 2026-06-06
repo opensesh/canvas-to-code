@@ -3,7 +3,7 @@
 > Open Session's internal bridge from a design export to BOS-aligned production code. Eleven gates catch off-brand drift before it ships and turn every handoff into a tracked dashboard entry.
 
 [![tests](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml/badge.svg)](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml)
-[![version](https://img.shields.io/badge/version-0.4.0-blue.svg)](./CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-0.5.0-blue.svg)](./CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange.svg)](https://docs.claude.com/claude-code)
 
 ```
@@ -88,19 +88,23 @@ The PM agent takes you through Gate 0 and writes everything else.
 
 ### Updating
 
+Run the bundled command from any consumer repo — it updates by git SHA, so it works even when a release didn't bump the version field:
+
+```
+/canvas-to-code:update          # check + update to latest main
+/canvas-to-code:update --check  # dry run: report version/SHA + commits behind
+```
+
+Restart the Claude Code session afterward so the refreshed agents/skills load.
+
+The built-in path still works, but `/plugin update` keys off the `version` field and **silently no-ops** when a release ships without a bump (tracked in [#2](https://github.com/opensesh/canvas-to-code/issues/2)):
+
 ```
 /plugin marketplace update canvas-to-code-marketplace
 /plugin update canvas-to-code
 ```
 
-If your Claude Code build doesn't ship `/plugin update`:
-
-```
-/plugin uninstall canvas-to-code
-/plugin install canvas-to-code@canvas-to-code-marketplace
-```
-
-Every release bumps `.claude-plugin/plugin.json`'s `version` field, enforced by [`version-check.yml`](./.github/workflows/version-check.yml), so both paths reliably pick up new versions.
+Every release bumps `.claude-plugin/plugin.json`'s `version` field, enforced by [`version-check.yml`](./.github/workflows/version-check.yml). `/canvas-to-code:update` doesn't depend on that discipline — it's the reliable path.
 
 ---
 
