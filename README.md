@@ -3,7 +3,7 @@
 > Open Session's internal bridge from a design export to BOS-aligned production code. Eleven gates catch off-brand drift before it ships and turn every handoff into a tracked dashboard entry.
 
 [![tests](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml/badge.svg)](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml)
-[![version](https://img.shields.io/badge/version-0.4.0-blue.svg)](./CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-0.5.0-blue.svg)](./CHANGELOG.md)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange.svg)](https://docs.claude.com/claude-code)
 
 ```
