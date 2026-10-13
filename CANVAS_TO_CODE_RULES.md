@@ -281,4 +281,4 @@ No autonomous escalation — this is a hands-on tool.
 
 ---
 
-*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code) · License: MIT · Origin: [Open Session](https://opensession.co)*
+*Plugin: [canvas-to-code](https://github.com/opensesh/canvas-to-code) · License: MIT · Origin: [open session](https://opensession.co)*
