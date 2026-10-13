@@ -1,6 +1,6 @@
 # Canvas-to-Code
 
-> Open Session's internal bridge from a design export to BOS-aligned production code. Eleven gates catch off-brand drift before it ships and turn every handoff into a tracked dashboard entry.
+> [open session](https://opensession.co)'s internal bridge from a design export to BOS-aligned production code. Eleven gates catch off-brand drift before it ships and turn every handoff into a tracked dashboard entry.
 
 [![tests](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml/badge.svg)](https://github.com/opensesh/canvas-to-code/actions/workflows/test.yml)
 [![version](https://img.shields.io/badge/version-0.5.0-blue.svg)](./CHANGELOG.md)
@@ -76,7 +76,7 @@ The slice plan that comes out the other side ships in 4–6 small PRs (scaffold 
 
 ## Quick start
 
-Already installed in BOS. To bring it into another Open Session repo:
+Already installed in BOS. To bring it into another open session repo:
 
 ```
 /plugin marketplace add opensesh/canvas-to-code
@@ -244,7 +244,7 @@ Canonical spec: [BOS-3.0 code-bridge spike](https://github.com/opensesh/BOS-3.0/
 
 ## Contributing
 
-This plugin is maintained inside Open Session for the BOS codebase. Issues and PRs welcome from the team. The test suite (`node --test tests/*.test.mjs`) must stay green.
+This plugin is maintained inside open session for the BOS codebase. Issues and PRs welcome from the team. The test suite (`node --test tests/*.test.mjs`) must stay green.
 
 ---
 
